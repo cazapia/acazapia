@@ -299,7 +299,7 @@ nav{
   overflow:hidden;
   mix-blend-mode:screen;
 }
-.hero-dots-front{z-index:3;}
+.hero-dots-front{z-index:3;visibility:hidden;}
 .hero-dots-back canvas,.hero-dots-front canvas{
   display:block;
   width:100%;
@@ -1323,8 +1323,8 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
     const p = {
       x:rand(0,W),
       y:rand(H*.12,H*.92),
-      vx:rand(-4,4),
-      vy:rand(-9,-3),
+      vx:rand(-18,18),
+      vy:rand(-85,-45),
       size:rand(front?1.8:1.2,front?4.6:3.8),
       alpha:rand(front?.42:.22,front?.82:.55),
       phase:rand(0,Math.PI*2),
@@ -1338,10 +1338,10 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
 
     if(emitted){
       /* Emisión discreta desde la zona de Adrián. */
-      p.x = W*rand(.08,.40);
-      p.y = H*rand(.30,.78);
-      p.vx = rand(-10,10);
-      p.vy = rand(-22,-7);
+      p.x = W*rand(.06,.43);
+      p.y = H*rand(.24,.84);
+      p.vx = rand(-35,35);
+      p.vy = rand(-125,-75);
       p.size = rand(1.4,3.4);
       p.alpha = rand(.25,.62);
       p.emitted = true;
@@ -1393,17 +1393,17 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
       const f = silhouetteForce(p);
 
       /* Movimiento orgánico + campo alrededor de la silueta. */
-      p.vx += Math.cos(p.phase + p.life*.35) * .12 * dt;
-      p.vy += Math.sin(p.phase + p.life*.27) * .07 * dt;
-      p.vx += f.x * dt;
-      p.vy += f.y * dt;
+      p.vx += Math.cos(p.phase + p.life*.35) * 10 * dt;
+      p.vy += Math.sin(p.phase + p.life*.27) * 6 * dt;
+      p.vx += f.x * 38 * dt;
+      p.vy += f.y * 38 * dt;
 
       /* Una ligera deriva vertical general. */
-      p.vy -= .9 * dt;
+      p.vy -= 2.5 * dt;
 
       /* Fricción para evitar aceleraciones exageradas. */
-      p.vx *= Math.pow(.985,dt*60);
-      p.vy *= Math.pow(.985,dt*60);
+      p.vx *= Math.pow(.997,dt*60);
+      p.vy *= Math.pow(.997,dt*60);
 
       p.x += p.vx * dt;
       p.y += p.vy * dt;
@@ -1413,8 +1413,8 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
         const cx = W*.30, cy = H*.58;
         const dx = p.x-cx, dy=p.y-cy;
         const dist = Math.hypot(dx,dy)||1;
-        p.vx += (dx/dist)*f.near*.22*dt;
-        p.vy += (dy/dist)*f.near*.22*dt;
+        p.vx += (dx/dist)*f.near*14*dt;
+        p.vy += (dy/dist)*f.near*14*dt;
       }
 
       if(p.y < -30 || p.x < -40 || p.x > W+40 || p.life > p.maxLife){
@@ -1427,12 +1427,17 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
     particlesBack = [];
     particlesFront = [];
 
-    /* Mayoría detrás: así se nota la profundidad sin saturar. */
-    for(let i=0;i<22;i++) particlesBack.push(makeParticle(false,false));
-    for(let i=0;i<12;i++) particlesFront.push(makeParticle(true,false));
+    /*
+      Mayor densidad alrededor de Adrián.
+      Mantiene la misma velocidad/animación, pero concentra más partículas
+      en su zona para que el efecto de profundidad sea claramente visible.
+    */
+    for(let i=0;i<30;i++) particlesBack.push(makeParticle(false,false));
+    for(let i=0;i<18;i++) particlesFront.push(makeParticle(true,false));
 
-    /* Unas pocas nacen alrededor de Adrián. */
-    for(let i=0;i<5;i++) particlesFront.push(makeParticle(true,true));
+    /* Partículas que nacen directamente alrededor de la silueta. */
+    for(let i=0;i<10;i++) particlesBack.push(makeParticle(false,true));
+    for(let i=0;i<10;i++) particlesFront.push(makeParticle(true,true));
   }
 
   function frame(now){
