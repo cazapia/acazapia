@@ -290,7 +290,13 @@ nav{
 .hero-inner-new{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
 .hero-bg-photo{position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:0;}
 .hero-bg-photo img{width:100%;height:100%;object-fit:cover;object-position:center 20%;opacity:0.55;filter:brightness(0.65) saturate(1.2);}
-.hero-content-center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:0;padding:100px 24px 24px;}
+/* Capas 3D de partículas + silueta */
+.hero-dots-back,.hero-dots-front{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.hero-dots-back{z-index:1;}
+.hero-silhouette{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
+.hero-silhouette img{width:100%;height:100%;object-fit:cover;object-position:center 20%;opacity:.92;filter:brightness(.9) contrast(1.05) saturate(1.05);}
+.hero-dots-front{z-index:3;}
+.hero-content-center{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:0;padding:100px 24px 24px;}
 .hero-content-center h1{text-align:center;margin-bottom:28px;}
 .hero-content-center .eyebrow{margin-bottom:24px;}
 .hero-content-center .btn-tg{margin-bottom:0;}
@@ -300,6 +306,7 @@ nav{
     min-height:420px;
     padding-top:130px;
   }
+  .hero-bg-photo img,.hero-silhouette img{object-position:20% center;}
   .hero-content-center{padding:40px 16px 16px;}
   .sales-badge-bottom{max-width:100%;}
 }
@@ -865,8 +872,8 @@ footer span{color:var(--neon)}
 
 <style id="mobile-hero-silhouette">
 @media (max-width:768px){
-  .hero-bg-photo img{
-    object-position: 20% center;
+  .hero-bg-photo img,.hero-silhouette img{
+    object-position:20% center;
   }
 }
 </style>
@@ -926,13 +933,20 @@ footer span{color:var(--neon)}
 <section class="hero" id="inicio">
   <div class="hero-glow"></div>
 
-  <!-- Floating dots injected by JS -->
+  <!-- Capas del efecto 3D: partículas detrás y delante de la silueta -->
+  <div class="hero-dots-back"></div>
 
   <div class="hero-inner-new">
     <!-- Foto de fondo con opacidad -->
     <div class="hero-bg-photo">
       <img src="images/foto-adrian.jpg" alt="Adrian Cazapia">
     </div>
+    <!-- Silueta transparente alineada exactamente con el fondo -->
+    <div class="hero-silhouette">
+      <img src="images/adrian-silueta.png" alt="" aria-hidden="true">
+    </div>
+    <!-- Partículas que pasan por delante de la silueta -->
+    <div class="hero-dots-front"></div>
     <!-- Contenido centrado encima -->
     <div class="hero-content-center">
       <div class="eyebrow"><span class="eyebrow-dot"></span>Sistema de Ventas en Automático</div>
@@ -1156,36 +1170,42 @@ document.querySelectorAll('.sec').forEach(sec => {
     sec.appendChild(d);
   }
 });
-for(let i=0;i<28;i++){
+const heroDotsBack = document.querySelector('.hero-dots-back');
+const heroDotsFront = document.querySelector('.hero-dots-front');
+
+function createHeroDot(parent, front=false){
   const d = document.createElement('div');
   d.className = 'dot-float';
   const size = Math.random()*5+2;
   const tipo = Math.random();
   let bg, shadow;
   if(tipo > 0.65){
-    // Cyan ultra brillante
     bg = 'rgba(51,204,255,1)';
     shadow = '0 0 8px 3px rgba(51,204,255,0.9), 0 0 20px 6px rgba(51,204,255,0.5)';
   } else if(tipo > 0.35){
-    // Blanco brillante
     bg = 'rgba(255,255,255,1)';
     shadow = '0 0 8px 3px rgba(255,255,255,0.95), 0 0 20px 6px rgba(200,220,255,0.6)';
   } else {
-    // Verde brillante
     bg = 'rgba(0,230,118,1)';
     shadow = '0 0 8px 3px rgba(0,230,118,0.9), 0 0 20px 6px rgba(0,230,118,0.4)';
   }
   d.style.cssText = `
     width:${size}px;height:${size}px;
     left:${Math.random()*100}%;
-    bottom:${Math.random()*60}%;
+    bottom:${Math.random()*65}%;
     background:${bg};
     box-shadow:${shadow};
     animation-duration:${Math.random()*9+5}s;
-    animation-delay:0s;
+    animation-delay:${Math.random()*-8}s;
+    opacity:${front ? .75 : .55};
   `;
-  hero.appendChild(d);
+  parent.appendChild(d);
 }
+
+// Algunas partículas quedan detrás de la silueta...
+for(let i=0;i<16;i++) createHeroDot(heroDotsBack,false);
+// ...y otras pasan por delante, creando el efecto de profundidad.
+for(let i=0;i<12;i++) createHeroDot(heroDotsFront,true);
 </script>
 
 
