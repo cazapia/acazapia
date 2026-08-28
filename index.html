@@ -831,6 +831,13 @@ h2 .c{color:var(--neon)}
 
 @media(max-width:768px){
 
+  /* Reducir SOLO la imagen de ventas en móvil */
+  .sales-badge img{
+    width:88%;
+    max-width:300px;
+    margin:0 auto;
+  }
+
   .testimonial-grid{
     grid-template-columns:1fr;
   }
@@ -1026,19 +1033,10 @@ footer span{color:var(--neon)}
 }
 
  
-/* AJUSTE: BOTÓN Y CONTENIDO INFERIOR MÁS ABAJO EN MÓVIL */
-@media(max-width:768px){
-  .hero-content-center .btn-tg,
-  .stats,
-  .sales-badge-bottom{
-    transform:translateY(22px);
-  }
-}
-
 /* AJUSTES FINALES DEL HERO — MÓVIL */
 @media(max-width:768px){
   .hero-inner-new{
-    min-height:900px;
+    min-height:780px;
     padding-top:118px;
     justify-content:flex-start;
   }
@@ -1052,7 +1050,6 @@ footer span{color:var(--neon)}
   .hero-content-center{
     padding:130px 10px 16px;
     width:100%;
-    transform:translateY(70px);
   }
   .hero-content-center .eyebrow{
     visibility:hidden;
@@ -1069,10 +1066,7 @@ footer span{color:var(--neon)}
   }
   .stat-n{font-size:30px;}
   .stat-l{font-size:8px;letter-spacing:1px;}
-  .sales-badge-bottom{
-    padding:0 24px 32px;
-    transform:translateY(70px);
-  }
+  .sales-badge-bottom{padding:0 24px 32px;}
 }
 
 </style>
