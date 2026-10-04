@@ -1082,27 +1082,28 @@ footer span{color:var(--neon)}
 
 /* AJUSTES PC — HERO */
 @media (min-width:769px){
+  .hero-content-center{
+    justify-content:center;
+    align-items:center;
+  }
   .hero-content-center .eyebrow{
     position:absolute;
-    top:8px;
+    top:-38px;
     left:50%;
     transform:translateX(-50%) scale(1.12);
     margin:0;
     white-space:nowrap;
     z-index:6;
   }
-
   .hero-content-center .btn-tg{
-    transform:scale(1.12);
+    transform:scale(1.18);
     transform-origin:center;
   }
-
   .hero-content-center .btn-tg svg{
     width:22px;
     height:22px;
   }
 }
-
 
 /* AJUSTES MÓVIL VERTICAL — ESCALAS */
 @media (max-width:768px) and (orientation:portrait){
@@ -1147,13 +1148,6 @@ footer span{color:var(--neon)}
   }
 }
 
-/* AJUSTE PC — TIENDA AUTOMATIZADA MÁS ARRIBA */
-@media (min-width:769px){
-  .hero-content-center .eyebrow{
-    top:-12px;
-  }
-}
-
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4277NS5P9P"></script>
@@ -1179,8 +1173,8 @@ footer span{color:var(--neon)}
   .hero-visual-stage::after{
     content:"";
     position:absolute;
-    top:calc(15% + 8px);
-    left:calc(50% - 61px);
+    top:calc(15% + 10px);
+    left:calc(50% - 66px);
     width:5px;
     height:5px;
     border-radius:50%;
