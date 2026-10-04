@@ -28,6 +28,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--FB);overflow-x:hid
 a{color:inherit;text-decoration:none}
 
 /* TICKER */
+.ticker-wrap{display:none !important;}
 /* NAV */
 nav{
   position:absolute;
@@ -408,7 +409,7 @@ nav{
 /* HERO NUEVO - escenario 3D de fondo */
 .hero-inner-new{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
 /* Una sola referencia de tamaño para TODAS las capas visuales */
-.hero-visual-stage{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;transform:translateY(45px);}
+.hero-visual-stage{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
 .hero-bg-photo,.hero-silhouette,.hero-dots-back,.hero-dots-front{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
 .hero-bg-photo{z-index:0;}
 .hero-bg-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 20%;opacity:.55;filter:brightness(.65) saturate(1.2);}
@@ -1076,6 +1077,44 @@ footer span{color:var(--neon)}
   }
   .stat-n{font-size:30px;}
   .stat-l{font-size:8px;letter-spacing:1px;}
+}
+
+
+/* AJUSTES PC — HERO */
+@media (min-width:769px){
+  .hero-content-center .eyebrow{
+    position:absolute;
+    top:8px;
+    left:50%;
+    transform:translateX(-50%) scale(1.12);
+    margin:0;
+    white-space:nowrap;
+    z-index:6;
+  }
+
+  .hero-content-center .btn-tg{
+    transform:scale(1.12);
+    transform-origin:center;
+  }
+
+  .hero-content-center .btn-tg svg{
+    width:22px;
+    height:22px;
+  }
+}
+
+
+/* AJUSTES MÓVIL VERTICAL — ESCALAS */
+@media (max-width:768px) and (orientation:portrait){
+  .hero-visual-stage::before{
+    transform:translateX(-50%) scale(.70);
+    transform-origin:center top;
+  }
+
+  .stats{
+    transform:scale(.80);
+    transform-origin:center bottom;
+  }
 }
 
 </style>
