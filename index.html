@@ -24,21 +24,14 @@
   --FB:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--FB);overflow-x:hidden;padding-top:38px;position:relative}
+body{background:var(--bg);color:var(--text);font-family:var(--FB);overflow-x:hidden;padding-top:0;position:relative}
 a{color:inherit;text-decoration:none}
 
 /* TICKER */
-.ticker-wrap{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(51,204,255,0.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);overflow:hidden;padding:9px 0;white-space:nowrap;border-bottom:1px solid rgba(255,255,255,0.55);box-shadow:0 2px 20px rgba(51,204,255,0.3),0 5px 18px rgba(255,255,255,0.16)}
-.ticker-wrap::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:7px;background:linear-gradient(to bottom,rgba(255,255,255,0.8),rgba(255,255,255,0.24),transparent);filter:blur(2px);pointer-events:none}
-.ticker-track{display:inline-flex;animation:ticker 15s linear infinite}
-.ticker-item{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#000;letter-spacing:2px;text-transform:uppercase;padding:0 28px}
-.tsep{color:rgba(0,0,0,0.3);font-size:18px;margin:0 4px}
-@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
 /* NAV */
 nav{
   position:absolute;
-  top:38px;
+  top:0;
   left:0;
   right:0;
   z-index:99;
@@ -332,7 +325,10 @@ nav{
 }
 .liquid-glass-inner{
   border-radius:38px;
-  padding:32px 44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px 26px;
   backdrop-filter:blur(6px) saturate(1.3) brightness(1.08);
   -webkit-backdrop-filter:blur(6px) saturate(1.3) brightness(1.08);
   background:linear-gradient(135deg,
@@ -346,10 +342,7 @@ nav{
   position:relative;
   overflow:hidden;
   z-index:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:350px;
+  min-height:0;
   box-sizing:border-box;
 }
 .liquid-glass-inner::before{
@@ -382,7 +375,7 @@ nav{
 .liquid-glass-inner h1{
   margin-bottom:0;
   text-align:center;
-  text-shadow:6px 7px 8px rgba(0,0,0,0.42), 0 0 12px rgba(0,0,0,0.18);
+  text-shadow:5px 6px 10px rgba(0,0,0,0.52), 0 0 14px rgba(0,0,0,0.16);
   position:relative;
   z-index:2;
 }
@@ -395,16 +388,16 @@ nav{
     animation-duration:4.5s;
   }
   .liquid-glass-inner{
-    padding:28px 16px 32px;
+    padding:18px 18px;
     border-radius:28px;
     display:flex;
     align-items:center;
     justify-content:center;
-    min-height:220px;
+    min-height:0;
   }
   .liquid-glass-inner h1{
-    font-size:clamp(36px,9.5vw,49px);
-    line-height:.94;
+    font-size:clamp(42px,11vw,56px);
+    line-height:.9;
     letter-spacing:1px;
     margin:0;
     width:100%;
@@ -1101,22 +1094,6 @@ footer span{color:var(--neon)}
 </head>
 <body>
 
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker-track">
-    <span class="ticker-item">📲 Únete al Telegram ahora <span class="tsep">·</span></span>
-    <span class="ticker-item">🚀 Aprende e-commerce desde cero <span class="tsep">·</span></span>
-    <span class="ticker-item">💰 Genera ingresos desde casa <span class="tsep">·</span></span>
-    <span class="ticker-item">📦 Encuentra tu producto ganador <span class="tsep">·</span></span>
-    <span class="ticker-item">✅ Sistema de ventas en automático <span class="tsep">·</span></span>
-    <span class="ticker-item">📲 Únete al Telegram ahora <span class="tsep">·</span></span>
-    <span class="ticker-item">🚀 Aprende e-commerce desde cero <span class="tsep">·</span></span>
-    <span class="ticker-item">💰 Genera ingresos desde casa <span class="tsep">·</span></span>
-    <span class="ticker-item">📦 Encuentra tu producto ganador <span class="tsep">·</span></span>
-    <span class="ticker-item">✅ Sistema de ventas en automático <span class="tsep">·</span></span>
-  </div>
-</div>
-
 <!-- NAV -->
 <nav>
 
@@ -1127,8 +1104,6 @@ footer span{color:var(--neon)}
   <div class="nav-pill">
     <a href="#inicio" class="active">Inicio</a>
     <a href="#testimonios">Testimonios</a>
-    <a href="#beneficios">Beneficios</a>
-    <a href="#para-ti">Para ti</a>
   </div>
 
   <div style="display:flex;align-items:center;gap:16px">
@@ -1171,14 +1146,14 @@ footer span{color:var(--neon)}
     </div>
     <!-- Contenido centrado encima -->
     <div class="hero-content-center">
-      <div class="eyebrow"><span class="eyebrow-dot"></span>Sistema de Ventas en Automático</div>
+      <div class="eyebrow"><span class="eyebrow-dot"></span>Tienda Automatizada</div>
       <div class="liquid-glass-wrap">
         <span class="border-glint top"></span>
         <span class="border-glint right"></span>
         <span class="border-glint bottom"></span>
         <span class="border-glint left"></span>
         <div class="liquid-glass-inner">
-          <h1><span class="hero-line">Aprende conmigo</span></h1>
+          <h1><span class="hero-line">Aprende</span><br><span class="c hero-line">conmigo</span></h1>
         </div>
       </div>
       <a href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" class="btn-tg">
@@ -1246,52 +1221,6 @@ footer span{color:var(--neon)}
 
   </div>
 </section>
-
-<section class="sec" id="beneficios">
-  <div class="wrap">
-    <h2>Tú solo<br><span class="c">Copia y Pega</span></h2>
-    <p class="sub">Te doy el paso a paso para que puedas hacer ventas en automático. Mira el video anclado del grupo, es 100% gratis!</p>
-    <div class="ben-grid">
-      <div class="ben"><div class="ben-n">01 · Estrategia</div><h3>Sistema Automatizado</h3><p>El método que aplico para conseguir ventas en automático, que solo necesitas copiar y pegar desde el día 1.</p></div>
-      <div class="ben"><div class="ben-n">02 · Análisis de Mercado</div><h3>Productos + Proveedor</h3><p>Simplifica y optimiza el tiempo de gestión para ahorrar tiempo y dinero.</p></div>
-      <div class="ben"><div class="ben-n">03 · Tráfico = Ventas</div><h3>Ventas Confirmadas ✅</h3><p>Publicidad fija con presupuesto bajo y cómo convertir visitas en compradores reales.</p></div>
-      <div class="ben"><div class="ben-n">04 · Comunidad</div><h3>No estás solo</h3><p>Grupo activo con testimonios cada fin de mes 💪</p></div>
-      <div class="ben ben-vip ben-vip-float">
-      <div class="ben-vip-shine"></div>
-      <div class="ben-n">05 · Asesoramiento</div>
-      <h3><span class="lock-icon">🔒</span> ACCESO ECOM VIP</h3>
-      <p>Acceso exclusivo a estrategias avanzadas. Soporte directo y revisión de tu tienda para no perder dinero.</p>
-      <div class="ben-vip-badge">✦ PREMIUM</div>
-      <div class="ben-corner-tag">ECOM VIP</div>
-    </div>
-      <div class="ben ben-plus ben-vip-float2">
-      <div class="ben-vip-shine"></div>
-      <div class="ben-corner-tag">ECOM VIP</div>
-      <div class="ben-n">06 · Plus</div>
-      <h3><span class="lock-icon-green">🔒</span> Método siempre vigente</h3>
-      <p>El ecommerce cambia rápido, el mercado se mueve cada hora, mantente actualizado.</p>
-      <div class="ben-plus-badge">✦ PLUS</div>
-    </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec sec-dark" id="para-ti">
-  <div class="wrap">
-    <p class="tag">¿Es para ti?</p>
-    <h2>ESTO ES PARA<br><span class="c">TI SI...</span></h2>
-    <div class="check-grid">
-      <div class="check-item check-shimmer" style="--shimmer-delay:0s"><div class="ci ci-gold"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Si quieres tener un ingreso extra desde casa sin depender de nadie</div>
-      <div class="check-item check-shimmer" style="--shimmer-delay:0.7s"><div class="ci ci-gold"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Si tienes cero experiencia en ventas online</div>
-      <div class="check-item"><div class="ci"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Si ya intentaste ecommerce pero sin resultados</div>
-      <div class="check-item"><div class="ci"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Si tienes poco capital y quieres invertirlo inteligentemente</div>
-      <div class="check-item check-shimmer" style="--shimmer-delay:1.4s"><div class="ci ci-gold"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Si buscas apalancarte de mi para tener los mismos resultados</div>
-      <div class="check-item check-shimmer" style="--shimmer-delay:2.1s"><div class="ci ci-gold"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Si estás dispuesto a poner constancia</div>
-    </div>
-  </div>
-</section>
-
-
 
 <!-- CTA -->
 <section class="cta">
