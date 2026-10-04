@@ -1117,6 +1117,35 @@ footer span{color:var(--neon)}
   }
 }
 
+
+/* AJUSTE MÓVIL — CORONA Y MENÚ */
+@media (max-width:768px) and (orientation:portrait){
+  nav{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    display:block;
+    height:150px;
+    padding:0;
+  }
+  nav .logo{
+    position:absolute;
+    top:0;
+    left:30%;
+    transform:translateX(-50%);
+    width:auto;
+    justify-content:center;
+  }
+  nav .logo img{height:70px !important;}
+  nav .nav-pill{
+    position:absolute;
+    top:10px;
+    left:30%;
+    transform:translateX(-50%);
+  }
+}
+
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4277NS5P9P"></script>
