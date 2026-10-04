@@ -170,7 +170,7 @@ nav{
 
   .nav-pill{
     display:flex;
-    width:100%;
+    width:max-content;
     justify-content:center;
     order:2;
     padding:4px 5px;
@@ -408,7 +408,7 @@ nav{
 /* HERO NUEVO - escenario 3D de fondo */
 .hero-inner-new{position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
 /* Una sola referencia de tamaño para TODAS las capas visuales */
-.hero-visual-stage{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.hero-visual-stage{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;transform:translateY(45px);}
 .hero-bg-photo,.hero-silhouette,.hero-dots-back,.hero-dots-front{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
 .hero-bg-photo{z-index:0;}
 .hero-bg-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 20%;opacity:.55;filter:brightness(.65) saturate(1.2);}
@@ -486,7 +486,7 @@ h1 .c{color:var(--neon)}
 .btn-tg{display:inline-flex;align-items:center;gap:12px;background:rgba(0,255,140,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#000;font-family:var(--FB);font-weight:800;font-size:15px;padding:16px 36px;border-radius:100px;border:1px solid rgba(150,255,200,0.6);cursor:pointer;box-shadow:0 0 35px rgba(0,255,140,0.7),0 0 70px rgba(0,255,140,0.3),inset 0 1px 0 rgba(255,255,255,0.5);transition:transform .2s,box-shadow .2s,background .2s;text-decoration:none}
 .btn-tg:hover{transform:translateY(-3px);background:rgba(0,255,140,1);box-shadow:0 0 60px rgba(0,255,140,1),0 0 120px rgba(0,255,140,0.6),0 10px 36px rgba(0,255,140,0.7)}
 .btn-tg svg{width:20px;height:20px;fill:#000;flex-shrink:0}
-.stats{display:flex;gap:36px;margin-top:48px;padding-top:36px;border-top:1px solid rgba(255,255,255,0.07);flex-wrap:wrap}
+.stats{position:absolute;left:24px;right:24px;bottom:34px;display:flex;gap:36px;justify-content:center;margin:0;padding-top:24px;border-top:1px solid rgba(255,255,255,0.07);flex-wrap:wrap;z-index:5}
 .stat-n{font-family:var(--FD);font-size:48px;color:var(--neon);line-height:1}
 .stat-l{font-size:11px;color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-top:3px}
 
@@ -1003,7 +1003,7 @@ footer span{color:var(--neon)}
 @media(max-width:768px){
   .hero-content-center .eyebrow{visibility:hidden;position:relative;z-index:0;}
   .hero-visual-stage::before{
-    content:"•  SISTEMA DE VENTAS EN AUTOMÁTICO";
+    content:"•  TIENDA AUTOMATIZADA";
     position:absolute;
     top:7%;
     left:50%;
@@ -1055,22 +1055,17 @@ footer span{color:var(--neon)}
   }
   .hero-content-center h1{margin-bottom:0;}
   .stats{
+    left:10px;
+    right:10px;
+    bottom:24px;
     gap:16px;
-    margin-top:34px;
-    padding-top:24px;
-    width:100%;
+    margin:0;
+    padding-top:18px;
+    width:auto;
     justify-content:space-evenly;
   }
   .stat-n{font-size:30px;}
   .stat-l{font-size:8px;letter-spacing:1px;}
-  .sales-badge-bottom{padding:0 24px 32px;}
-  .sales-badge{
-    width:100%;
-    max-width:300px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  .sales-badge img{width:100%;height:auto;}
 }
 
 </style>
@@ -1158,20 +1153,13 @@ footer span{color:var(--neon)}
       </div>
       <a href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" class="btn-tg">
         <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.26 13.988l-2.985-.934c-.648-.204-.66-.648.136-.958l11.658-4.49c.537-.194 1.006.131.825.615z"/></svg>
-        Unirme gratis al grupo
+        Solicitar unirme
       </a>
-      <div class="stats">
-        <div><div class="stat-n">+1400</div><div class="stat-l">Emprendedores activos</div></div>
-        <div><div class="stat-n">4 meses</div><div class="stat-l">Vendiendo en automático</div></div>
-        <div><div class="stat-n">+ S/ 35K</div><div class="stat-l">En ventas</div></div>
-      </div>
     </div>
-    <!-- Badge de ventas -->
-    <div class="sales-badge-bottom">
-      <div class="sales-badge">
-        <div class="sales-badge-title">📊 Ventas reales — últimos 90 días</div>
-        <img src="images/ventas.jpg" alt="Ventas 14833 PEN">
-      </div>
+    <div class="stats">
+      <div><div class="stat-n">+1400</div><div class="stat-l">Emprendedores activos</div></div>
+      <div><div class="stat-n">4 meses</div><div class="stat-l">Vendiendo en automático</div></div>
+      <div><div class="stat-n">+ S/ 35K</div><div class="stat-l">En ventas</div></div>
     </div>
   </div>
 </section>
