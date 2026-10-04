@@ -1132,17 +1132,18 @@ footer span{color:var(--neon)}
   nav .logo{
     position:absolute;
     top:0;
-    left:30%;
-    transform:translateX(-50%);
+    left:7px;
+    transform:none;
     width:auto;
-    justify-content:center;
+    justify-content:flex-start;
   }
-  nav .logo img{height:70px !important;}
+  nav .logo img{height:59.5px !important;}
   nav .nav-pill{
     position:absolute;
     top:10px;
-    left:70%;
-    transform:translateX(-50%);
+    left:auto;
+    right:7px;
+    transform:none;
   }
 }
 
@@ -1167,6 +1168,27 @@ footer span{color:var(--neon)}
 @media (max-width:768px){
   .hero-bg-photo img,.hero-silhouette img{
     object-position:20% center;
+  }
+}
+
+/* AJUSTE MÓVIL — PUNTO DE TIENDA AUTOMATIZADA CON BRILLO */
+@media (max-width:768px){
+  .hero-visual-stage::before{
+    text-shadow:0 0 6px rgba(51,204,255,.9),0 0 14px rgba(51,204,255,.65);
+  }
+  .hero-visual-stage::after{
+    content:"";
+    position:absolute;
+    top:calc(15% + 8px);
+    left:calc(50% - 41px);
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 5px #fff,0 0 10px rgba(51,204,255,1),0 0 18px rgba(51,204,255,.8);
+    animation:pulse 1.5s ease-in-out infinite;
+    z-index:2;
+    pointer-events:none;
   }
 }
 </style>
