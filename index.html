@@ -1243,6 +1243,15 @@ footer span{color:var(--neon)}
   .hero-dots-front{z-index:3;visibility:visible;}
   .hero-dots-back{z-index:1;}
   .hero-dots-back canvas,.hero-dots-front canvas{width:100%;height:100%;}
+  /* Reduce ligeramente la intensidad del fondo para separar las partículas blancas. */
+  .hero-visual-stage::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+    background:rgba(18,27,40,.10);
+    pointer-events:none;
+  }
 
   /* Cabecera: corona a la izquierda y navegación Inicio / Rastro a la derecha. */
   nav{
@@ -1468,9 +1477,8 @@ footer span{color:var(--neon)}
     -webkit-backdrop-filter:blur(13px) saturate(1.35);
     backdrop-filter:blur(13px) saturate(1.35);
     box-shadow:
-      0 3px 0 rgba(168,45,64,.12),
-      0 0 9px rgba(239,83,103,.22),
-      0 0 15px rgba(239,83,103,.12),
+      0 10px 28px rgba(24,32,43,.20),
+      0 3px 9px rgba(24,32,43,.12),
       inset 0 1px 0 rgba(255,255,255,.88);
   }
   .mobile-live-dot{
@@ -1485,9 +1493,8 @@ footer span{color:var(--neon)}
     -webkit-backdrop-filter:blur(15px) saturate(1.45);
     backdrop-filter:blur(15px) saturate(1.45);
     box-shadow:
-      0 4px 0 rgba(34,104,180,.10),
-      0 0 8px rgba(40,127,212,.48),
-      0 0 17px rgba(40,127,212,.28),
+      0 13px 32px rgba(20,43,70,.24),
+      0 4px 12px rgba(20,43,70,.14),
       inset 0 1px 0 rgba(255,255,255,.92),
       inset 0 0 12px rgba(255,255,255,.28);
   }
@@ -1510,9 +1517,8 @@ footer span{color:var(--neon)}
     -webkit-backdrop-filter:blur(14px) saturate(1.45);
     backdrop-filter:blur(14px) saturate(1.45);
     box-shadow:
-      0 4px 0 rgba(25,130,65,.15),
-      0 0 8px rgba(71,224,123,.48),
-      0 0 16px rgba(71,224,123,.28),
+      0 12px 30px rgba(18,43,29,.24),
+      0 4px 12px rgba(18,43,29,.14),
       inset 0 1px 0 rgba(255,255,255,.9);
     animation:familyButtonPulse 4.2s ease-in-out infinite;
     transform-origin:center;
@@ -1924,6 +1930,8 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
     };
   }
 
+  const mobileParticleMode = window.matchMedia('(max-width: 768px)').matches;
+
   function makeParticle(front=false, emitted=false){
     const p = {
       x:rand(0,W),
@@ -1938,8 +1946,23 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
       emitted:false,
       life:rand(0,20),
       maxLife:rand(18,32),
-      color: Math.random()<.27 ? 'gold' : 'white'
+      color: mobileParticleMode ? 'white' : (Math.random()<.27 ? 'gold' : 'white'),
+      targetX:W*.5 + rand(-W*.055,W*.055),
+      targetY:H*.09,
+      speed:rand(58,105)
     };
+
+    if(mobileParticleMode){
+      p.x=rand(W*.04,W*.96);
+      p.y=H+rand(0,H*.24);
+      p.vx=0;
+      p.vy=0;
+      p.alpha=rand(.34,.68);
+      p.emitted=true;
+      p.life=0;
+      p.maxLife=rand(8,16);
+      return p;
+    }
 
     if(emitted){
       /* Emisión discreta desde la zona de Adrián. */
@@ -1958,7 +1981,7 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
 
   function resetParticle(p, emitted=false){
     Object.assign(p, makeParticle(p.front, emitted));
-    if(!emitted){
+    if(!mobileParticleMode && !emitted){
       p.x = rand(0,W);
       p.y = rand(H*.08,H*.98);
     }
@@ -1993,6 +2016,19 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
   function update(list,dt){
     for(const p of list){
       p.life += dt;
+
+      if(mobileParticleMode){
+        /* Trayectoria recta: nacen abajo y convergen hacia el centro superior. */
+        const dx=p.targetX-p.x;
+        const dy=p.targetY-p.y;
+        const distance=Math.hypot(dx,dy)||1;
+        p.x += (dx/distance)*p.speed*dt;
+        p.y += (dy/distance)*p.speed*dt;
+        if(distance<12 || p.y< -12 || p.life>p.maxLife){
+          resetParticle(p,true);
+        }
+        continue;
+      }
 
       const f = silhouetteForce(p);
 
@@ -2051,12 +2087,17 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
       Mantiene la misma velocidad/animación, pero concentra más partículas
       en su zona para que el efecto de profundidad sea claramente visible.
     */
-    for(let i=0;i<30;i++) particlesBack.push(makeParticle(false,false));
-    for(let i=0;i<18;i++) particlesFront.push(makeParticle(true,false));
+    if(mobileParticleMode){
+      for(let i=0;i<34;i++) particlesBack.push(makeParticle(false,true));
+      for(let i=0;i<22;i++) particlesFront.push(makeParticle(true,true));
+    }else{
+      for(let i=0;i<30;i++) particlesBack.push(makeParticle(false,false));
+      for(let i=0;i<18;i++) particlesFront.push(makeParticle(true,false));
 
-    /* Partículas que nacen directamente alrededor de la silueta. */
-    for(let i=0;i<10;i++) particlesBack.push(makeParticle(false,true));
-    for(let i=0;i<10;i++) particlesFront.push(makeParticle(true,true));
+      /* Partículas que nacen directamente alrededor de la silueta. */
+      for(let i=0;i<10;i++) particlesBack.push(makeParticle(false,true));
+      for(let i=0;i<10;i++) particlesFront.push(makeParticle(true,true));
+    }
   }
 
   function frame(now){
