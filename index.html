@@ -1698,6 +1698,314 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 }
 </style>
 
+
+<style id="desktop-interface-match-mobile">
+/* PC: se replica la identidad visual aprobada en móvil, adaptando proporciones al formato ancho. */
+@media (min-width:769px) {
+  :root{
+    --mobile-ink:#18202b;
+    --mobile-blue:#287fd4;
+  }
+
+  html{scroll-behavior:smooth;}
+  body{
+    background-color:#dce9f8 !important;
+    background-image:url('images/fondopc.png');
+    background-repeat:no-repeat;
+    background-position:center top;
+    background-size:100% auto;
+    background-attachment:scroll;
+    color:var(--mobile-ink);
+  }
+
+  /* Cabecera clara tipo cristal, como en móvil. */
+  nav{
+    position:absolute;
+    top:0;left:0;right:0;
+    z-index:100;
+    min-height:88px;
+    padding:12px 34px;
+    align-items:flex-start;
+    background:transparent;
+  }
+  nav .logo img{height:68px !important;width:auto !important;}
+  nav .nav-pill{
+    display:flex;
+    gap:3px;
+    margin-top:8px;
+    padding:5px;
+    border:1px solid rgba(55,75,100,.16);
+    border-radius:999px;
+    background:rgba(255,255,255,.58);
+    box-shadow:0 4px 18px rgba(60,80,110,.10);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+  }
+  nav .nav-pill a{
+    padding:8px 18px;
+    color:#28384b;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.5px;
+  }
+  nav .nav-pill a.active{
+    color:#1f70bd;
+    background:rgba(64,151,231,.13);
+    box-shadow:none;
+    text-shadow:none;
+  }
+  .nav-label-desktop{display:none;}
+  .nav-label-mobile{display:inline;}
+  nav > div:last-child{display:none !important;}
+
+  /* Portada: misma composición que móvil, ampliada para escritorio. */
+  .hero{
+    min-height:100vh;
+    background:transparent !important;
+    color:var(--mobile-ink);
+  }
+  .hero-glow{display:none !important;}
+  .hero-inner-new{
+    position:relative;
+    width:100%;
+    min-height:100vh;
+    height:100vh;
+    padding:0;
+    margin:0;
+    justify-content:flex-start;
+    overflow:hidden;
+  }
+  .hero-visual-stage{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    overflow:hidden;
+    background-image:url('images/fondopc.png');
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
+  }
+  .hero-bg-photo,.hero-silhouette{display:none !important;}
+  .hero-dots-back,.hero-dots-front{
+    display:block;
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    mix-blend-mode:normal;
+    z-index:1;
+    pointer-events:none;
+  }
+  .hero-dots-front{z-index:3;visibility:visible;}
+  .hero-dots-back{z-index:1;}
+  .hero-dots-back canvas,.hero-dots-front canvas{width:100%;height:100%;}
+  .hero-visual-stage::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+    background:rgba(18,27,40,.08);
+    pointer-events:none;
+  }
+
+  .hero-content-center,.hero-inner-new>.stats{display:none !important;}
+  .mobile-hero-ui{
+    display:block;
+    position:absolute;
+    inset:0;
+    z-index:5;
+    pointer-events:none;
+  }
+  .mobile-live{
+    position:absolute;
+    top:17.5%;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 22px;
+    border:1.5px solid #c32100;
+    border-radius:999px;
+    background:rgba(255,255,255,.56);
+    color:#c32100;
+    box-shadow:0 10px 28px rgba(24,32,43,.20),0 3px 9px rgba(24,32,43,.12),inset 0 1px 0 rgba(255,255,255,.88);
+    font-family:var(--FB);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:2px;
+    white-space:nowrap;
+  }
+  .mobile-live-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:#c32100;
+    box-shadow:0 0 6px rgba(195,33,0,.9),0 0 12px rgba(195,33,0,.48);
+    animation:pulse 1.5s ease-in-out infinite;
+  }
+  .mobile-main-row{
+    position:absolute;
+    top:27%;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(1120px,86vw);
+    height:45%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 2%;
+  }
+  .mobile-character-space{
+    width:58%;
+    height:100%;
+    flex:0 0 58%;
+  }
+  .mobile-goal{
+    width:34%;
+    flex:0 0 34%;
+    min-height:145px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:20px 12px;
+    border:1.8px solid rgba(40,127,212,.92);
+    border-radius:34px;
+    background:linear-gradient(145deg,rgba(255,255,255,.42),rgba(225,241,255,.22));
+    -webkit-backdrop-filter:blur(15px) saturate(1.45);
+    backdrop-filter:blur(15px) saturate(1.45);
+    box-shadow:0 13px 32px rgba(20,43,70,.24),0 4px 12px rgba(20,43,70,.14),inset 0 1px 0 rgba(255,255,255,.92),inset 0 0 12px rgba(255,255,255,.28);
+    color:#287fd4;
+    text-align:center;
+    transform:translateY(-3%);
+  }
+  .mobile-goal strong{
+    color:#287fd4;
+    font-family:var(--FD);
+    font-size:clamp(66px,7vw,100px);
+    line-height:.88;
+    font-weight:900;
+    text-shadow:0 2px 2px rgba(22,77,137,.20);
+    -webkit-text-stroke:.35px currentColor;
+  }
+  .mobile-goal span{
+    margin-top:12px;
+    font-family:'Wildstripe','Bebas Neue',Impact,sans-serif;
+    color:#287fd4;
+    font-size:clamp(36px,3.7vw,52px);
+    line-height:.95;
+    text-shadow:0 2px 2px rgba(22,77,137,.18);
+  }
+  .mobile-family-btn{
+    pointer-events:auto;
+    position:absolute;
+    left:50%;
+    top:70%;
+    transform:translateX(-50%);
+    width:max-content;
+    max-width:88%;
+    min-height:68px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:13px;
+    padding:16px 34px;
+    border-radius:999px;
+    background:#39ff14 !important;
+    border:1.5px solid rgba(255,255,255,.92) !important;
+    color:#092607 !important;
+    font-family:var(--FB);
+    font-size:15px;
+    font-weight:900;
+    letter-spacing:.45px;
+    white-space:nowrap;
+    text-decoration:none;
+    box-shadow:0 10px 28px rgba(20,55,13,.25),0 0 18px rgba(57,255,20,.20),inset 0 1px 0 rgba(255,255,255,.78);
+    isolation:isolate;
+    overflow:hidden;
+    animation:familyButtonPulse 4.2s ease-in-out infinite;
+    transform-origin:center;
+  }
+  .mobile-family-btn::before{
+    content:"";
+    position:absolute;
+    z-index:0;
+    top:0;
+    left:-38%;
+    width:38%;
+    height:3px;
+    border-radius:999px;
+    pointer-events:none;
+    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.72) 25%,#fff 50%,rgba(255,255,255,.72) 75%,transparent 100%);
+    filter:drop-shadow(0 0 4px rgba(255,255,255,.95)) drop-shadow(0 0 8px rgba(57,255,20,.95));
+    animation:familyBorderGlint 3.2s ease-in-out infinite;
+  }
+  .mobile-family-btn > *{position:relative;z-index:1;}
+  .mobile-family-btn:active{animation-play-state:paused;transform:translateX(-50%) scale(.98);}
+  .mobile-family-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;height:32px;
+    border:1.5px solid rgba(9,38,7,.72);
+    border-radius:50%;
+    color:#092607;
+  }
+  .mobile-family-icon svg{display:block;width:17px;height:17px;fill:currentColor;}
+  .mobile-bottom-nav{
+    position:absolute;
+    left:12%;
+    right:12%;
+    bottom:28px;
+    display:grid;
+    grid-template-columns:1fr 1px 1fr 1px 1fr;
+    align-items:center;
+    justify-items:center;
+    gap:8px;
+    padding:10px 3px 8px;
+    border-top:none;
+    color:#287fd4;
+    pointer-events:auto;
+  }
+  .mobile-bottom-nav a{
+    display:flex;
+    width:100%;
+    min-height:38px;
+    align-items:center;
+    justify-content:center;
+    color:#287fd4;
+    font-family:var(--FD);
+    font-size:clamp(23px,2.2vw,31px);
+    letter-spacing:.8px;
+    text-decoration:none;
+    white-space:nowrap;
+    text-shadow:0 2px 2px rgba(22,77,137,.24),0 0 7px rgba(40,127,212,.12);
+  }
+  .mobile-bottom-nav span{
+    width:1px;
+    height:32px;
+    background:rgba(40,127,212,.38);
+  }
+
+  /* Rastro mantiene el fondo de la portada y no vuelve al fondo oscuro original. */
+  #testimonios{
+    background:linear-gradient(180deg,rgba(204,222,247,.24) 0%,rgba(218,232,250,.48) 42%,rgba(239,245,253,.88) 100%) !important;
+    color:var(--mobile-ink);
+  }
+  #testimonios::before,#testimonios::after{opacity:.16;}
+  #testimonios .wrap{max-width:1160px;}
+  #testimonios h2{color:#18202b;}
+  #testimonios h2 .c{color:#33c8f2;}
+  .testimonial-grid{gap:30px;}
+  .testimonial-real{
+    background:rgba(255,255,255,.42);
+    border:1px solid rgba(51,155,225,.18);
+    box-shadow:0 12px 28px rgba(35,85,130,.13),inset 0 1px 0 rgba(255,255,255,.8);
+  }
+
+  /* Conserva la CTA oscura y su nueva composición, igual que en móvil. */
+  .cta{background:#0d0d20 !important;}
+}
+</style>
+
 </head>
 <body>
 
