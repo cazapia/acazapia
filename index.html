@@ -1187,6 +1187,277 @@ footer span{color:var(--neon)}
 }
 </style>
 
+
+<style id="mobile-interface-v2">
+/* La nueva composición se activa únicamente en móvil. PC permanece como está por ahora. */
+.nav-label-mobile{display:none;}
+.mobile-hero-ui{display:none;}
+
+@media(max-width:768px){
+  :root{
+    --mobile-ink:#18202b;
+    --mobile-blue:#287fd4;
+    --mobile-red:#e65d70;
+    --mobile-green:#43d46d;
+  }
+
+  body{background:#fff;color:var(--mobile-ink);}
+  .hero{
+    min-height:100svh;
+    min-height:100vh;
+    background:#fff;
+    color:var(--mobile-ink);
+  }
+  .hero-glow{display:none;}
+  .hero-inner-new{
+    position:relative;
+    width:100%;
+    min-height:100svh;
+    min-height:100vh;
+    height:100svh;
+    padding:0;
+    margin:0;
+    justify-content:flex-start;
+    overflow:hidden;
+  }
+  .hero-visual-stage{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    overflow:hidden;
+    background-image:url('images/fondomovil.png');
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
+  }
+  .hero-bg-photo,.hero-silhouette{display:none!important;}
+  .hero-dots-back,.hero-dots-front{
+    display:block;
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    mix-blend-mode:normal;
+    z-index:1;
+    pointer-events:none;
+  }
+  .hero-dots-front{z-index:3;visibility:visible;}
+  .hero-dots-back{z-index:1;}
+  .hero-dots-back canvas,.hero-dots-front canvas{width:100%;height:100%;}
+
+  /* Cabecera: corona a la izquierda y navegación Inicio / Rastro a la derecha. */
+  nav{
+    position:absolute;
+    top:0;left:0;right:0;
+    z-index:100;
+    height:86px;
+    padding:8px 12px;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+    background:transparent;
+  }
+  nav .logo{
+    order:1;
+    width:auto;
+    display:flex;
+    justify-content:flex-start;
+    align-items:flex-start;
+    flex:0 0 auto;
+  }
+  nav .logo img{height:54px!important;width:auto!important;}
+  nav .nav-pill{
+    order:2;
+    display:flex;
+    width:auto;
+    margin-top:5px;
+    margin-left:auto;
+    justify-content:center;
+    gap:2px;
+    padding:4px;
+    background:rgba(255,255,255,.58);
+    border:1px solid rgba(55,75,100,.16);
+    box-shadow:0 4px 18px rgba(60,80,110,.10);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+  }
+  nav .nav-pill a{
+    padding:7px 12px;
+    color:#28384b;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.3px;
+  }
+  nav .nav-pill a.active{
+    color:#1f70bd;
+    background:rgba(64,151,231,.13);
+    box-shadow:none;
+    text-shadow:none;
+  }
+  .nav-label-desktop{display:none;}
+  .nav-label-mobile{display:inline;}
+  nav > div:last-child{display:none!important;}
+
+  /* Sustituye en móvil el hero anterior sin tocar el contenido de escritorio. */
+  .hero-content-center,.hero-inner-new>.stats{display:none!important;}
+  .mobile-hero-ui{
+    display:block;
+    position:absolute;
+    inset:0;
+    z-index:5;
+    pointer-events:none;
+  }
+  .mobile-live{
+    position:absolute;
+    top:17.5%;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 17px;
+    border:1.5px solid rgba(226,91,111,.78);
+    border-radius:999px;
+    background:rgba(255,255,255,.54);
+    color:#d94e66;
+    box-shadow:0 4px 18px rgba(214,91,112,.10),inset 0 1px 0 rgba(255,255,255,.8);
+    font-family:var(--FB);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.7px;
+    white-space:nowrap;
+  }
+  .mobile-live-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:#ed5268;
+    box-shadow:0 0 8px rgba(237,82,104,.65);
+    animation:pulse 1.5s ease-in-out infinite;
+  }
+  .mobile-main-row{
+    position:absolute;
+    top:28%;
+    left:0;right:0;
+    height:43%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 4.5%;
+  }
+  .mobile-character-space{
+    width:58%;
+    height:100%;
+    flex:0 0 58%;
+    /* Espacio reservado para el futuro video de la silueta. */
+  }
+  .mobile-goal{
+    width:39%;
+    flex:0 0 39%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:10px 4px 13px;
+    border:1.7px solid rgba(48,132,218,.78);
+    border-radius:30px;
+    background:rgba(255,255,255,.28);
+    color:#287fd4;
+    text-align:center;
+    transform:translateY(-3%);
+    box-shadow:0 5px 20px rgba(45,125,205,.07),inset 0 1px 0 rgba(255,255,255,.75);
+  }
+  .mobile-goal strong{
+    font-family:var(--FD);
+    font-size:clamp(40px,12vw,58px);
+    line-height:.88;
+    letter-spacing:-1px;
+    font-weight:900;
+  }
+  .mobile-goal span{
+    margin-top:7px;
+    font-family:var(--FD);
+    font-size:clamp(24px,7vw,34px);
+    line-height:.95;
+    letter-spacing:.2px;
+  }
+  .mobile-family-btn{
+    pointer-events:auto;
+    position:absolute;
+    left:50%;
+    top:70%;
+    transform:translateX(-50%);
+    width:max-content;
+    max-width:88%;
+    min-height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:11px;
+    padding:13px 24px;
+    border-radius:999px;
+    background:linear-gradient(135deg,#4be078,#38c961);
+    border:1px solid rgba(255,255,255,.72);
+    color:#102719;
+    font-family:var(--FB);
+    font-size:clamp(11px,3.2vw,14px);
+    font-weight:900;
+    letter-spacing:.35px;
+    white-space:nowrap;
+    text-decoration:none;
+    box-shadow:0 9px 25px rgba(43,190,93,.22),inset 0 1px 0 rgba(255,255,255,.58);
+  }
+  .mobile-family-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:29px;height:29px;
+    border:1.5px solid rgba(17,52,31,.72);
+    border-radius:50%;
+    font-size:17px;
+    line-height:1;
+  }
+  .mobile-bottom-nav{
+    position:absolute;
+    left:5%;
+    right:5%;
+    bottom:max(22px,env(safe-area-inset-bottom));
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+    gap:8px;
+    padding:10px 3px 8px;
+    border-top:1px solid rgba(35,48,65,.22);
+    color:#17202b;
+    pointer-events:auto;
+  }
+  .mobile-bottom-nav a{
+    color:#17202b;
+    font-family:var(--FD);
+    font-size:clamp(19px,5.4vw,25px);
+    letter-spacing:.6px;
+    text-decoration:none;
+    white-space:nowrap;
+  }
+  .mobile-bottom-nav span{
+    width:1px;
+    height:28px;
+    background:rgba(30,43,59,.48);
+  }
+  /* La nueva portada es clara; los indicadores no deben heredar el neón oscuro anterior. */
+  .hero-visual-stage::before,.hero-visual-stage::after{display:none!important;}
+}
+
+@media(max-width:380px){
+  .mobile-live{top:17%;font-size:9px;padding:7px 13px;}
+  .mobile-main-row{top:29%;height:41%;padding:0 3%;}
+  .mobile-character-space{width:56%;flex-basis:56%;}
+  .mobile-goal{width:41%;flex-basis:41%;border-radius:25px;}
+  .mobile-family-btn{top:70%;padding:12px 17px;}
+  .mobile-bottom-nav{left:4%;right:4%;}
+}
+</style>
+
 </head>
 <body>
 
@@ -1199,7 +1470,7 @@ footer span{color:var(--neon)}
 
   <div class="nav-pill">
     <a href="#inicio" class="active">Inicio</a>
-    <a href="#testimonios">Testimonios</a>
+    <a href="#testimonios"><span class="nav-label-desktop">Testimonios</span><span class="nav-label-mobile">Rastro</span></a>
   </div>
 
   <div style="display:flex;align-items:center;gap:16px">
@@ -1227,20 +1498,35 @@ footer span{color:var(--neon)}
   <div class="hero-inner-new">
     <!-- ESCENARIO 3D: todas las capas comparten exactamente el mismo marco -->
     <div class="hero-visual-stage">
-      <!-- Fondo -->
-      <div class="hero-bg-photo">
-        <img src="images/foto-adrian.jpg" alt="Adrian Cazapia">
-      </div>
-      <!-- Partículas detrás de Adrián -->
+      <!-- Fondo nuevo responsive: móvil primero; PC se ajustará en la siguiente fase -->
       <div class="hero-dots-back"></div>
-      <!-- Recorte transparente de Adrián, alineado al fondo -->
-      <div class="hero-silhouette">
-        <img src="images/adrian-silueta.png" alt="" aria-hidden="true">
-      </div>
-      <!-- Partículas delante de Adrián -->
       <div class="hero-dots-front"></div>
     </div>
-    <!-- Contenido centrado encima -->
+
+    <!-- NUEVA INTERFAZ MÓVIL: composición basada en el boceto aprobado -->
+    <div class="mobile-hero-ui">
+      <div class="mobile-live"><span class="mobile-live-dot"></span> RETO EN VIVO</div>
+      <div class="mobile-main-row">
+        <div class="mobile-character-space" aria-hidden="true"></div>
+        <div class="mobile-goal">
+          <strong>100K</strong>
+          <span>30 días</span>
+        </div>
+      </div>
+      <a href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" rel="noopener" class="mobile-family-btn">
+        <span class="mobile-family-icon">↗</span>
+        UNIRME A LA FAMILIA
+      </a>
+      <div class="mobile-bottom-nav" aria-label="Navegación principal">
+        <a href="#inicio">FE</a>
+        <span></span>
+        <a href="#testimonios">DIOS</a>
+        <span></span>
+        <a href="#testimonios">PROPÓSITO</a>
+      </div>
+    </div>
+
+    <!-- Contenido centrado encima (se conserva para PC; la nueva composición móvil lo sustituye) -->
     <div class="hero-content-center">
       <div class="eyebrow"><span class="eyebrow-dot"></span>Tienda Automatizada</div>
       <div class="liquid-glass-wrap">
@@ -1426,7 +1712,7 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
   - El mapa de transparencia usa EXACTAMENTE el PNG de la silueta.
 */
 (function initHeroParticles(){
-  if(!heroDotsBack || !heroDotsFront || !silhouetteImg) return;
+  if(!heroDotsBack || !heroDotsFront) return;
 
   const backCanvas = document.createElement('canvas');
   const frontCanvas = document.createElement('canvas');
@@ -1463,6 +1749,12 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
 
     resizeCanvas(backCanvas, backCtx);
     resizeCanvas(frontCanvas, frontCtx);
+
+    /* Sin silueta visible: las partículas continúan flotando libremente. */
+    if(!silhouetteImg){
+      maskData = null;
+      return;
+    }
 
     /* Máscara a resolución reducida para que el efecto sea ligero en móvil. */
     const scale = Math.min(1, 720 / Math.max(W,H));
@@ -1676,6 +1968,13 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
   }
 
   function start(){
+    if(!silhouetteImg){
+      drawSilhouetteMask();
+      seed();
+      cancelAnimationFrame(raf);
+      raf=requestAnimationFrame(frame);
+      return;
+    }
     if(!silhouetteImg.complete || !silhouetteImg.naturalWidth){
       silhouetteImg.addEventListener('load',()=>{
         drawSilhouetteMask();
