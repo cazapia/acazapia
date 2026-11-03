@@ -1458,6 +1458,100 @@ footer span{color:var(--neon)}
 }
 </style>
 
+
+<style id="mobile-polish-nov-03">
+/* Ajustes visuales de portada: solo móvil. La distribución de PC queda intacta. */
+@media (max-width:768px){
+  .mobile-live{
+    border:1.5px solid rgba(232,76,96,.88);
+    background:linear-gradient(135deg,rgba(255,255,255,.56),rgba(255,235,238,.28));
+    -webkit-backdrop-filter:blur(13px) saturate(1.35);
+    backdrop-filter:blur(13px) saturate(1.35);
+    box-shadow:
+      0 3px 0 rgba(168,45,64,.12),
+      0 0 9px rgba(239,83,103,.22),
+      0 0 15px rgba(239,83,103,.12),
+      inset 0 1px 0 rgba(255,255,255,.88);
+  }
+  .mobile-live-dot{
+    background:#ed5268;
+    box-shadow:0 0 5px rgba(237,82,104,.9),0 0 10px rgba(237,82,104,.45);
+  }
+
+  .mobile-goal{
+    border:1.8px solid rgba(40,127,212,.92);
+    border-radius:30px;
+    background:linear-gradient(145deg,rgba(255,255,255,.42),rgba(225,241,255,.22));
+    -webkit-backdrop-filter:blur(15px) saturate(1.45);
+    backdrop-filter:blur(15px) saturate(1.45);
+    box-shadow:
+      0 4px 0 rgba(34,104,180,.10),
+      0 0 8px rgba(40,127,212,.48),
+      0 0 17px rgba(40,127,212,.28),
+      inset 0 1px 0 rgba(255,255,255,.92),
+      inset 0 0 12px rgba(255,255,255,.28);
+  }
+  .mobile-goal strong{
+    color:#287fd4;
+    font-weight:900;
+    text-shadow:0 2px 2px rgba(22,77,137,.20);
+    -webkit-text-stroke:.35px currentColor;
+  }
+  .mobile-goal span{
+    font-family:'Wildstripe','Bebas Neue',Impact,sans-serif;
+    color:#287fd4;
+    text-shadow:0 2px 2px rgba(22,77,137,.18);
+  }
+
+  .mobile-family-btn{
+    background:linear-gradient(135deg,rgba(89,230,133,.58),rgba(55,205,103,.42));
+    border:1.5px solid rgba(255,255,255,.92);
+    color:#123d25;
+    -webkit-backdrop-filter:blur(14px) saturate(1.45);
+    backdrop-filter:blur(14px) saturate(1.45);
+    box-shadow:
+      0 4px 0 rgba(25,130,65,.15),
+      0 0 8px rgba(71,224,123,.48),
+      0 0 16px rgba(71,224,123,.28),
+      inset 0 1px 0 rgba(255,255,255,.9);
+    animation:familyButtonPulse 4.2s ease-in-out infinite;
+    transform-origin:center;
+  }
+  .mobile-family-btn:active{animation-play-state:paused;transform:translateX(-50%) scale(.98);}
+  @keyframes familyButtonPulse{
+    0%,100%{transform:translateX(-50%) scale(1);}
+    50%{transform:translateX(-50%) scale(1.045);}
+  }
+  .mobile-family-icon{
+    border-color:rgba(18,61,37,.72);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.45);
+  }
+
+  .mobile-bottom-nav{
+    border-top:none;
+    display:grid;
+    grid-template-columns:1fr 1px 1fr 1px 1fr;
+    align-items:center;
+    justify-items:center;
+    padding:10px 3px 8px;
+  }
+  .mobile-bottom-nav a{
+    display:flex;
+    width:100%;
+    min-height:32px;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#287fd4;
+    text-shadow:0 2px 2px rgba(22,77,137,.24),0 0 7px rgba(40,127,212,.12);
+  }
+  .mobile-bottom-nav span{
+    height:28px;
+    background:rgba(40,127,212,.38);
+  }
+}
+</style>
+
 </head>
 <body>
 
