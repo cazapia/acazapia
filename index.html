@@ -1558,6 +1558,17 @@ footer span{color:var(--neon)}
 }
 </style>
 
+<style id="mobile-telegram-icon">
+@media (max-width:768px) {
+  .mobile-family-icon svg {
+    display:block;
+    width:15px;
+    height:15px;
+    fill:currentColor;
+  }
+}
+</style>
+
 <style id="mobile-navigation-and-button-refinement">
 /* Llegada suave al cambiar entre Inicio y Rastro. */
 @keyframes sectionArrivalSoft {
@@ -1603,6 +1614,38 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
     16% { opacity:1; }
     72% { left:100%; opacity:1; }
     84%,100% { left:100%; opacity:0; }
+  }
+}
+</style>
+
+<style id="mobile-rastro-background-continuity">
+/* En móvil, Inicio y el comienzo de Rastro comparten un único lienzo de fondo.
+   Así la imagen no vuelve a empezar ni cambia bruscamente al entrar en Rastro. */
+@media (max-width:768px) {
+  body {
+    background-color:#dce9f8 !important;
+    background-image:url('images/fondomovil.png');
+    background-repeat:no-repeat;
+    background-position:center top;
+    background-size:100% auto;
+    background-attachment:scroll;
+  }
+  .hero,
+  .hero-inner-new,
+  .hero-visual-stage {
+    background:transparent !important;
+  }
+  #testimonios {
+    background:linear-gradient(
+      180deg,
+      rgba(204,222,247,.24) 0%,
+      rgba(218,232,250,.48) 42%,
+      rgba(239,245,253,.88) 100%
+    ) !important;
+  }
+  #testimonios::before,
+  #testimonios::after {
+    opacity:.16;
   }
 }
 </style>
@@ -1663,7 +1706,9 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
         </div>
       </div>
       <a href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" rel="noopener" class="mobile-family-btn">
-        <span class="mobile-family-icon">↗</span>
+        <span class="mobile-family-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" aria-label="Telegram"><path d="M21.7 2.3 18.6 21c-.2 1.3-.9 1.6-1.9 1l-5.2-3.8-2.5 2.4c-.3.3-.6.6-1.2.6l.4-5.3 9.7-8.8c.4-.4-.1-.6-.7-.2L5.2 14.4.1 12.8c-1.1-.3-1.1-1.1.2-1.6L20.1 3c.9-.3 1.8.2 1.6 1.3Z"/></svg>
+        </span>
         UNIRME A LA FAMILIA
       </a>
       <div class="mobile-bottom-nav" aria-label="Navegación principal">
