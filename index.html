@@ -1558,6 +1558,55 @@ footer span{color:var(--neon)}
 }
 </style>
 
+<style id="mobile-navigation-and-button-refinement">
+/* Llegada suave al cambiar entre Inicio y Rastro. */
+@keyframes sectionArrivalSoft {
+  from { opacity: .88; transform: translateY(9px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  section.section-arrival { animation: none; }
+}
+@media (max-width:768px) {
+  .mobile-live { border-color:#c32100 !important; color:#c32100 !important; }
+  .mobile-live-dot {
+    background:#c32100 !important;
+    box-shadow:0 0 6px rgba(195,33,0,.9),0 0 12px rgba(195,33,0,.48) !important;
+  }
+  .mobile-family-btn {
+    position:absolute;
+    isolation:isolate;
+    overflow:hidden;
+    background:#39ff14 !important;
+    border:1.5px solid rgba(255,255,255,.92) !important;
+    color:#092607 !important;
+    box-shadow:0 10px 28px rgba(20,55,13,.25),0 0 18px rgba(57,255,20,.20),inset 0 1px 0 rgba(255,255,255,.78) !important;
+  }
+  .mobile-family-btn::before {
+    content:"";
+    position:absolute;
+    z-index:0;
+    top:0;
+    left:-38%;
+    width:38%;
+    height:3px;
+    border-radius:999px;
+    pointer-events:none;
+    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.72) 25%,#fff 50%,rgba(255,255,255,.72) 75%,transparent 100%);
+    filter:drop-shadow(0 0 4px rgba(255,255,255,.95)) drop-shadow(0 0 8px rgba(57,255,20,.95));
+    animation:familyBorderGlint 3.2s ease-in-out infinite;
+  }
+  .mobile-family-btn > * { position:relative; z-index:1; }
+  @keyframes familyBorderGlint {
+    0%,8% { left:-38%; opacity:0; }
+    16% { opacity:1; }
+    72% { left:100%; opacity:1; }
+    84%,100% { left:100%; opacity:0; }
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -1756,6 +1805,44 @@ if(glassEl){
 // Active nav pill on scroll
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-pill a');
+
+// Navegación con desplazamiento cinematográfico y llegada sutil a la sección.
+document.querySelectorAll('.nav-pill a[href^="#"], .mobile-bottom-nav a[href^="#"]').forEach(link => {
+  link.addEventListener('click', event => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (!target) return;
+    event.preventDefault();
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const startY = window.scrollY;
+    const targetY = target.getBoundingClientRect().top + window.scrollY;
+    const distance = targetY - startY;
+    const duration = reduceMotion ? 0 : 760;
+    const startTime = performance.now();
+
+    if (duration === 0) {
+      window.scrollTo(0, targetY);
+      return;
+    }
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+    }
+    function animateScroll(now) {
+      const progress = Math.min(1, (now - startTime) / duration);
+      window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+      if (progress < 1) requestAnimationFrame(animateScroll);
+      else {
+        target.classList.remove('section-arrival');
+        void target.offsetWidth;
+        target.classList.add('section-arrival');
+        window.setTimeout(() => target.classList.remove('section-arrival'), 520);
+      }
+    }
+    requestAnimationFrame(animateScroll);
+    history.replaceState(null, '', link.getAttribute('href'));
+  });
+});
 window.addEventListener('scroll', () => {
   let current = '';
   sections.forEach(s => {
