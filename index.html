@@ -2060,6 +2060,20 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   }
 }
 </style>
+
+<style id="hero-character-video-final-position">
+/* Mismo anclaje inferior izquierdo en PC, tablet y móvil. */
+.hero-character-video{
+  top:auto !important;
+  right:auto !important;
+  bottom:0 !important;
+  left:0 !important;
+  width:72% !important;
+  height:92% !important;
+  object-fit:contain !important;
+  object-position:left bottom !important;
+}
+</style>
 </head>
 <body>
 
@@ -2101,7 +2115,7 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
     <!-- ESCENARIO 3D: todas las capas comparten exactamente el mismo marco -->
     <div class="hero-visual-stage">
       <!-- Video del personaje con transparencia: se muestra en PC y móvil -->
-      <video class="hero-character-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+      <video class="hero-character-video" autoplay muted playsinline preload="auto" aria-hidden="true">
         <source src="videos/DIOSESGRANDE_1.webm" type="video/webm">
       </video>
       <div class="hero-dots-back"></div>
@@ -2683,6 +2697,18 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
 </script>
 
 
+
+
+<script id="hero-character-video-play-once">
+document.addEventListener('DOMContentLoaded', function () {
+  const characterVideo = document.querySelector('.hero-character-video');
+  if (!characterVideo) return;
+  characterVideo.loop = false;
+  characterVideo.addEventListener('ended', function () {
+    characterVideo.pause();
+  });
+});
+</script>
 
 </body>
 </html>
