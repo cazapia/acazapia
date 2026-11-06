@@ -2073,6 +2073,16 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   object-fit:contain !important;
   object-position:left bottom !important;
 }
+/* En móvil, ampliar el personaje para que tenga presencia casi a pantalla completa. */
+@media (max-width:768px){
+  .hero-character-video{
+    width:120vw !important;
+    height:100% !important;
+    max-width:none !important;
+    object-fit:contain !important;
+    object-position:left bottom !important;
+  }
+}
 </style>
 </head>
 <body>
