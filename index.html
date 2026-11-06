@@ -2044,6 +2044,22 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 }
 </style>
 
+
+<style id="pc-hero-video-position">
+/* Ajuste exclusivo para PC: video anclado a la esquina inferior izquierda del hero. */
+@media (min-width:769px){
+  .hero-character-video{
+    top:auto;
+    right:auto;
+    bottom:0;
+    left:0;
+    width:72%;
+    height:92%;
+    object-fit:contain;
+    object-position:left bottom;
+  }
+}
+</style>
 </head>
 <body>
 
