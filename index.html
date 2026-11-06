@@ -2073,10 +2073,10 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   object-fit:contain !important;
   object-position:left bottom !important;
 }
-/* En móvil, ampliar el personaje para que tenga presencia casi a pantalla completa. */
-@media (max-width:768px){
+/* En iPhone y iPad, ampliar el personaje y mantenerlo anclado abajo a la izquierda. */
+@media (max-width:1024px){
   .hero-character-video{
-    width:120vw !important;
+    width:110vw !important;
     height:100% !important;
     max-width:none !important;
     object-fit:contain !important;
@@ -2709,13 +2709,33 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
 
 
 
-<script id="hero-character-video-play-once">
+<script id="hero-character-video-play-once-freeze">
 document.addEventListener('DOMContentLoaded', function () {
-  const characterVideo = document.querySelector('.hero-character-video');
-  if (!characterVideo) return;
-  characterVideo.loop = false;
-  characterVideo.addEventListener('ended', function () {
-    characterVideo.pause();
+  const video = document.querySelector('.hero-character-video');
+  if (!video) return;
+
+  video.loop = false;
+  video.removeAttribute('loop');
+
+  let frozen = false;
+  const freezeOnLastVisibleFrame = function () {
+    if (frozen || !Number.isFinite(video.duration) || video.duration <= 0) return;
+    const safeFrameTime = Math.max(0, video.duration - (1 / 60));
+    if (video.currentTime >= safeFrameTime) {
+      frozen = true;
+      video.pause();
+      try { video.currentTime = safeFrameTime; } catch (e) {}
+    }
+  };
+
+  video.addEventListener('timeupdate', freezeOnLastVisibleFrame);
+  video.addEventListener('ended', function () {
+    if (frozen) return;
+    frozen = true;
+    video.pause();
+    const safeFrameTime = Number.isFinite(video.duration)
+      ? Math.max(0, video.duration - (1 / 60)) : video.currentTime;
+    try { video.currentTime = safeFrameTime; } catch (e) {}
   });
 });
 </script>
