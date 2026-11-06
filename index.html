@@ -2016,6 +2016,34 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 }
 </style>
 
+<style id="hero-character-video">
+/* Personaje animado transparente: capa central entre partículas traseras y delanteras. */
+.hero-character-video{
+  position:absolute;
+  z-index:2;
+  top:16%;
+  left:4%;
+  width:56%;
+  height:68%;
+  display:block;
+  object-fit:contain;
+  object-position:center bottom;
+  pointer-events:none;
+  background:transparent;
+}
+/* En móvil, el personaje ocupa el espacio reservado a la izquierda del objetivo. */
+@media(max-width:768px){
+  .hero-character-video{
+    top:25%;
+    left:0;
+    width:61%;
+    height:48%;
+    object-fit:contain;
+    object-position:center center;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -2056,7 +2084,10 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   <div class="hero-inner-new">
     <!-- ESCENARIO 3D: todas las capas comparten exactamente el mismo marco -->
     <div class="hero-visual-stage">
-      <!-- Fondo nuevo responsive: móvil primero; PC se ajustará en la siguiente fase -->
+      <!-- Video del personaje con transparencia: se muestra en PC y móvil -->
+      <video class="hero-character-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="videos/DIOSESGRANDE_1.webm" type="video/webm">
+      </video>
       <div class="hero-dots-back"></div>
       <div class="hero-dots-front"></div>
     </div>
