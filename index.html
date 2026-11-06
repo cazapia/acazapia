@@ -1700,7 +1700,7 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 
 
 <style id="desktop-interface-match-mobile">
-/* PC: se replica la identidad visual aprobada en móvil, adaptando proporciones al formato ancho. */
+/* PC: misma identidad visual y controles de móvil, adaptados al formato ancho. */
 @media (min-width:769px) {
   :root{
     --mobile-ink:#18202b;
@@ -1940,6 +1940,16 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   }
   .mobile-family-btn > *{position:relative;z-index:1;}
   .mobile-family-btn:active{animation-play-state:paused;transform:translateX(-50%) scale(.98);}
+  .mobile-family-btn:hover,
+  .mobile-family-btn:focus-visible{
+    box-shadow:0 14px 34px rgba(20,55,13,.30),0 0 28px rgba(57,255,20,.34),inset 0 1px 0 rgba(255,255,255,.9);
+    filter:saturate(1.08) brightness(1.03);
+  }
+  .mobile-bottom-nav a:hover,
+  .mobile-bottom-nav a:focus-visible{
+    color:#155da8;
+    text-shadow:0 2px 3px rgba(22,77,137,.28),0 0 12px rgba(40,127,212,.28);
+  }
   .mobile-family-icon{
     display:inline-flex;
     align-items:center;
@@ -2413,7 +2423,8 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
     };
   }
 
-  const mobileParticleMode = window.matchMedia('(max-width: 768px)').matches;
+  // El mismo comportamiento de partículas se utiliza en móvil y PC.
+  const mobileParticleMode = true;
 
   function makeParticle(front=false, emitted=false){
     const p = {
@@ -2570,17 +2581,9 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
       Mantiene la misma velocidad/animación, pero concentra más partículas
       en su zona para que el efecto de profundidad sea claramente visible.
     */
-    if(mobileParticleMode){
-      for(let i=0;i<34;i++) particlesBack.push(makeParticle(false,true));
-      for(let i=0;i<22;i++) particlesFront.push(makeParticle(true,true));
-    }else{
-      for(let i=0;i<30;i++) particlesBack.push(makeParticle(false,false));
-      for(let i=0;i<18;i++) particlesFront.push(makeParticle(true,false));
-
-      /* Partículas que nacen directamente alrededor de la silueta. */
-      for(let i=0;i<10;i++) particlesBack.push(makeParticle(false,true));
-      for(let i=0;i<10;i++) particlesFront.push(makeParticle(true,true));
-    }
+    // Densidad y distribución idénticas en ambas vistas.
+    for(let i=0;i<34;i++) particlesBack.push(makeParticle(false,true));
+    for(let i=0;i<22;i++) particlesFront.push(makeParticle(true,true));
   }
 
   function frame(now){
