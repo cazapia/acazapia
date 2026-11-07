@@ -2044,6 +2044,20 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 }
 </style>
 
+<style id="hero-character-video-sources">
+/* Fuentes ocultas: el canvas muestra únicamente el personaje con alfa real. */
+.hero-character-source,.hero-character-mask{
+  position:absolute !important;
+  width:2px !important;
+  height:2px !important;
+  left:-10px !important;
+  top:0 !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+  z-index:-1 !important;
+}
+</style>
+
 
 <style id="pc-hero-video-position">
 /* Ajuste exclusivo para PC: video anclado a la esquina inferior izquierda del hero. */
@@ -2124,9 +2138,13 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   <div class="hero-inner-new">
     <!-- ESCENARIO 3D: todas las capas comparten exactamente el mismo marco -->
     <div class="hero-visual-stage">
-      <!-- Video del personaje con transparencia: se muestra en PC y móvil -->
-      <video class="hero-character-video" autoplay muted playsinline preload="auto" aria-hidden="true">
-        <source src="videos/DIOSESGRANDE_1.webm" type="video/webm">
+      <!-- Personaje con transparencia compuesta desde color + máscara alfa -->
+      <canvas class="hero-character-video" aria-hidden="true"></canvas>
+      <video class="hero-character-source" muted playsinline preload="auto" aria-hidden="true">
+        <source src="videos/DIOSESGRANDE_color.mp4" type="video/mp4">
+      </video>
+      <video class="hero-character-mask" muted playsinline preload="auto" aria-hidden="true">
+        <source src="videos/DIOSESGRANDE_alpha.mp4" type="video/mp4">
       </video>
       <div class="hero-dots-back"></div>
       <div class="hero-dots-front"></div>
@@ -2709,34 +2727,179 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
 
 
 
-<script id="hero-character-video-play-once-freeze">
+<script id="hero-character-video-alpha-compositor">
 document.addEventListener('DOMContentLoaded', function () {
-  const video = document.querySelector('.hero-character-video');
-  if (!video) return;
+  const canvas = document.querySelector('.hero-character-video');
+  const colorVideo = document.querySelector('.hero-character-source');
+  const maskVideo = document.querySelector('.hero-character-mask');
+  if (!canvas || !colorVideo || !maskVideo) return;
 
-  video.loop = false;
-  video.removeAttribute('loop');
+  colorVideo.loop = false;
+  maskVideo.loop = false;
+  colorVideo.muted = maskVideo.muted = true;
+  colorVideo.playsInline = maskVideo.playsInline = true;
 
-  let frozen = false;
-  const freezeOnLastVisibleFrame = function () {
-    if (frozen || !Number.isFinite(video.duration) || video.duration <= 0) return;
-    const safeFrameTime = Math.max(0, video.duration - (1 / 60));
-    if (video.currentTime >= safeFrameTime) {
-      frozen = true;
-      video.pause();
-      try { video.currentTime = safeFrameTime; } catch (e) {}
-    }
-  };
-
-  video.addEventListener('timeupdate', freezeOnLastVisibleFrame);
-  video.addEventListener('ended', function () {
-    if (frozen) return;
-    frozen = true;
-    video.pause();
-    const safeFrameTime = Number.isFinite(video.duration)
-      ? Math.max(0, video.duration - (1 / 60)) : video.currentTime;
-    try { video.currentTime = safeFrameTime; } catch (e) {}
+  const gl = canvas.getContext('webgl', {
+    alpha: true,
+    premultipliedAlpha: false,
+    antialias: false,
+    preserveDrawingBuffer: true
   });
+  if (!gl) {
+    console.error('WebGL no disponible: no se puede componer la transparencia del personaje.');
+    return;
+  }
+
+  const vertexSource = `
+    attribute vec2 a_position;
+    attribute vec2 a_texCoord;
+    varying vec2 v_texCoord;
+    void main(){
+      gl_Position = vec4(a_position, 0.0, 1.0);
+      v_texCoord = a_texCoord;
+    }
+  `;
+  const fragmentSource = `
+    precision mediump float;
+    varying vec2 v_texCoord;
+    uniform sampler2D u_color;
+    uniform sampler2D u_mask;
+    void main(){
+      vec4 color = texture2D(u_color, v_texCoord);
+      vec3 maskColor = texture2D(u_mask, v_texCoord).rgb;
+      float alpha = dot(maskColor, vec3(0.299, 0.587, 0.114));
+      gl_FragColor = vec4(color.rgb, alpha);
+    }
+  `;
+
+  function compile(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(shader));
+      gl.deleteShader(shader);
+      return null;
+    }
+    return shader;
+  }
+  const vs = compile(gl.VERTEX_SHADER, vertexSource);
+  const fs = compile(gl.FRAGMENT_SHADER, fragmentSource);
+  if (!vs || !fs) return;
+  const program = gl.createProgram();
+  gl.attachShader(program, vs);
+  gl.attachShader(program, fs);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(gl.getProgramInfoLog(program));
+    return;
+  }
+  gl.useProgram(program);
+
+  const vertices = new Float32Array([
+    -1,-1, 0,1,  1,-1, 1,1,
+    -1, 1, 0,0,  1, 1, 1,0
+  ]);
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+  const position = gl.getAttribLocation(program, 'a_position');
+  const texCoord = gl.getAttribLocation(program, 'a_texCoord');
+  gl.enableVertexAttribArray(position);
+  gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 16, 0);
+  gl.enableVertexAttribArray(texCoord);
+  gl.vertexAttribPointer(texCoord, 2, gl.FLOAT, false, 16, 8);
+
+  function makeTexture(unit, uniformName) {
+    const texture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.uniform1i(gl.getUniformLocation(program, uniformName), unit);
+    return texture;
+  }
+  const colorTexture = makeTexture(0, 'u_color');
+  const maskTexture = makeTexture(1, 'u_mask');
+
+  let raf = 0;
+  let started = false;
+  let frozen = false;
+  let lastDraw = 0;
+
+  function uploadTexture(texture, video, unit) {
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+  }
+
+  function drawFrame() {
+    if (colorVideo.readyState < 2 || maskVideo.readyState < 2) return;
+    const w = colorVideo.videoWidth || 720;
+    const h = colorVideo.videoHeight || 1280;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+    }
+    uploadTexture(colorTexture, colorVideo, 0);
+    uploadTexture(maskTexture, maskVideo, 1);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    lastDraw = performance.now();
+  }
+
+  function render() {
+    if (frozen) return;
+    if (Math.abs(colorVideo.currentTime - maskVideo.currentTime) > 0.06 &&
+        !maskVideo.ended) {
+      try { maskVideo.currentTime = colorVideo.currentTime; } catch (e) {}
+    }
+    drawFrame();
+    if (!colorVideo.ended && !colorVideo.paused) {
+      raf = requestAnimationFrame(render);
+    }
+  }
+
+  function freeze() {
+    if (frozen) return;
+    drawFrame();
+    frozen = true;
+    if (raf) cancelAnimationFrame(raf);
+    colorVideo.pause();
+    maskVideo.pause();
+  }
+
+  colorVideo.addEventListener('ended', freeze);
+  colorVideo.addEventListener('timeupdate', function () {
+    if (Number.isFinite(colorVideo.duration) &&
+        colorVideo.duration > 0 &&
+        colorVideo.currentTime >= colorVideo.duration - 0.04) {
+      drawFrame();
+    }
+  });
+
+  function startWhenReady() {
+    if (started || colorVideo.readyState < 2 || maskVideo.readyState < 2) return;
+    started = true;
+    drawFrame();
+    Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
+      render();
+    }).catch(function (error) {
+      started = false;
+      console.warn('No se pudo iniciar el video automáticamente:', error);
+    });
+  }
+  colorVideo.addEventListener('loadeddata', startWhenReady);
+  maskVideo.addEventListener('loadeddata', startWhenReady);
+  colorVideo.addEventListener('canplay', startWhenReady);
+  maskVideo.addEventListener('canplay', startWhenReady);
+
+  if (colorVideo.readyState >= 2 && maskVideo.readyState >= 2) startWhenReady();
 });
 </script>
 
