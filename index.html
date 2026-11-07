@@ -2135,6 +2135,61 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   .nav-pill a[data-mobile-target] { cursor:pointer; }
 }
 </style>
+
+<style id="contador-1600">
+.stats{grid-template-columns:1fr !important;}
+.stat-n.count-done{animation:countGlow 2.8s ease-in-out infinite;}
+@keyframes countGlow{0%,100%{text-shadow:0 0 0 rgba(51,204,255,0)}50%{text-shadow:0 0 18px rgba(51,204,255,.75)}}
+@media(max-width:768px){
+  .mobile-count{
+    position:absolute;left:50%;top:80.5%;transform:translateX(-50%);
+    display:flex;align-items:baseline;gap:8px;padding:7px 18px 8px;
+    border-radius:999px;border:1.5px solid rgba(48,132,218,.78);
+    background:rgba(255,255,255,.34);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    color:#287fd4;white-space:nowrap;pointer-events:none;
+    box-shadow:0 5px 20px rgba(45,125,205,.12),inset 0 1px 0 rgba(255,255,255,.75);
+  }
+  .mobile-count strong{font-family:var(--FD);font-size:30px;line-height:1;letter-spacing:.5px;min-width:2.7ch;text-align:right}
+  .mobile-count span{font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
+  .mobile-count:has(.count-done){animation:countPulse 2.8s ease-in-out infinite}
+  @keyframes countPulse{0%,100%{box-shadow:0 5px 20px rgba(45,125,205,.12),inset 0 1px 0 rgba(255,255,255,.75)}50%{box-shadow:0 5px 26px rgba(45,125,205,.38),inset 0 1px 0 rgba(255,255,255,.75)}}
+}
+@media(prefers-reduced-motion:reduce){.stat-n.count-done,.mobile-count{animation:none !important}}
+</style>
+
+<style id="paloma-boton">
+/* Boton verde fuera. Solo reaparece si la paloma no logra activarse (video bloqueado). */
+.mobile-family-btn{display:none !important;}
+.hero.dove-failed .mobile-family-btn{display:flex !important;}
+
+.dove-link{
+  position:absolute;z-index:40;display:block;left:0;top:0;width:0;height:0;
+  opacity:0;pointer-events:none;border-radius:42%;text-decoration:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity .6s ease,left .35s ease,top .35s ease,width .35s ease,height .35s ease;
+}
+.dove-link.on{opacity:1;pointer-events:auto;cursor:pointer;}
+.dove-link:active{transform:scale(.97);}
+.dove-ring{
+  position:absolute;inset:-4px;border-radius:inherit;pointer-events:none;
+  border:2px solid rgba(255,255,255,.9);
+  box-shadow:0 0 16px rgba(255,255,255,.9),0 0 34px rgba(51,204,255,.55);
+  animation:doveRing 2.1s ease-out infinite;
+}
+@keyframes doveRing{0%{transform:scale(.9);opacity:.95}100%{transform:scale(1.25);opacity:0}}
+.dove-label{
+  position:absolute;left:50%;top:calc(100% + 12px);transform:translateX(-50%);
+  white-space:nowrap;font-family:var(--FB);font-size:10px;font-weight:800;line-height:1;
+  letter-spacing:1.6px;text-transform:uppercase;color:#287fd4;
+  padding:8px 14px;border-radius:999px;
+  background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.85);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:0 6px 18px rgba(24,32,43,.16),inset 0 1px 0 rgba(255,255,255,.9);
+  pointer-events:none;
+}
+@media(prefers-reduced-motion:reduce){.dove-ring{animation:none}}
+</style>
 </head>
 <body>
 
@@ -2177,10 +2232,10 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
     <div class="hero-visual-stage">
       <!-- Personaje con transparencia compuesta desde color + máscara alfa -->
       <canvas class="hero-character-video" aria-hidden="true"></canvas>
-      <video class="hero-character-source" autoplay muted playsinline webkit-playsinline preload="auto" aria-hidden="true">
+      <video class="hero-character-source" muted playsinline webkit-playsinline preload="auto" aria-hidden="true">
         <source src="videos/DIOSESGRANDE_color.mp4" type="video/mp4">
       </video>
-      <video class="hero-character-mask" autoplay muted playsinline webkit-playsinline preload="auto" aria-hidden="true">
+      <video class="hero-character-mask" muted playsinline webkit-playsinline preload="auto" aria-hidden="true">
         <source src="videos/DIOSESGRANDE_alpha.mp4" type="video/mp4">
       </video>
       <div class="hero-dots-back"></div>
@@ -2203,6 +2258,7 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
         </span>
         UNIRME A LA FAMILIA
       </a>
+      <div class="mobile-count" aria-label="Más de 1600 emprendedores"><strong data-count="1600" data-prefix="+">+1600</strong><span>emprendedores</span></div>
     </div>
 
     <!-- Contenido centrado encima (se conserva para PC; la nueva composición móvil lo sustituye) -->
@@ -2223,11 +2279,14 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
       </a>
     </div>
     <div class="stats">
-      <div><div class="stat-n">+1500</div><div class="stat-l">Emprendedores activos</div></div>
-      <div><div class="stat-n">6 meses</div><div class="stat-l">Vendiendo en automático</div></div>
-      <div><div class="stat-n">+ S/ 80.000</div><div class="stat-l">En ventas</div></div>
+      <div><div class="stat-n" data-count="1600" data-prefix="+">+1600</div><div class="stat-l">Emprendedores activos</div></div>
     </div>
   </div>
+  <!-- PALOMA = BOTON DE ACCESO (se posiciona solo sobre el brillo del video) -->
+  <a class="dove-link" href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" rel="noopener noreferrer" aria-label="Unirme a la familia en Telegram">
+    <span class="dove-ring"></span>
+    <span class="dove-label">Toca para unirte</span>
+  </a>
 </section>
 
 
@@ -2862,6 +2921,12 @@ document.addEventListener('DOMContentLoaded', function () {
   let started = false;
   let frozen = false;
   let lastDraw = 0;
+  let delayDone = false;   // el video arranca 1 segundo despues de entrar
+  let doveBox = null;      // zona de la paloma en coordenadas del video
+  let lastLocate = 0;
+  let locBuf = null;
+  const doveLink = document.querySelector('.dove-link');
+  const heroEl = document.querySelector('.hero');
 
   function uploadTexture(texture, video, unit) {
     gl.activeTexture(gl.TEXTURE0 + unit);
@@ -2902,14 +2967,82 @@ document.addEventListener('DOMContentLoaded', function () {
   function freeze() {
     if (frozen) return;
     drawFrame();
+    updateDove(true);
     frozen = true;
     if (raf) cancelAnimationFrame(raf);
     colorVideo.pause();
     maskVideo.pause();
   }
 
+  // ---- Paloma: detecta el brillo blanco del video y pone el boton encima ----
+  function spanOf(arr, total, lo, hi) {
+    let acc = 0, a = 0, b = arr.length - 1, gotA = false;
+    for (let i = 0; i < arr.length; i++) {
+      acc += arr[i];
+      if (!gotA && acc >= total * lo) { a = i; gotA = true; }
+      if (acc >= total * hi) { b = i; break; }
+    }
+    return [a, b];
+  }
+  function placeDove() {
+    if (!doveBox || !doveLink || !heroEl) return;
+    const r = canvas.getBoundingClientRect();
+    const hr = heroEl.getBoundingClientRect();
+    const s = Math.min(r.width / doveBox.w, r.height / doveBox.h);
+    const ox = r.left, oy = r.top + (r.height - doveBox.h * s); // object-position: left bottom
+    let x0 = ox + doveBox.x0 * s, x1 = ox + doveBox.x1 * s;
+    let y0 = oy + doveBox.y0 * s, y1 = oy + doveBox.y1 * s;
+    const padX = Math.max(10, (x1 - x0) * 0.08), padY = Math.max(10, (y1 - y0) * 0.12);
+    x0 -= padX; x1 += padX; y0 -= padY; y1 += padY;
+    const minW = 90, minH = 70;
+    if (x1 - x0 < minW) { const c = (x0 + x1) / 2; x0 = c - minW / 2; x1 = c + minW / 2; }
+    if (y1 - y0 < minH) { const c = (y0 + y1) / 2; y0 = c - minH / 2; y1 = c + minH / 2; }
+    x0 = Math.max(x0, hr.left + 4);
+    x1 = Math.min(x1, hr.right - 4, window.innerWidth - 4);
+    y0 = Math.max(y0, hr.top);
+    y1 = Math.min(y1, hr.bottom - 4);
+    if (x1 - x0 < 30 || y1 - y0 < 30) return;
+    doveLink.style.left = (x0 - hr.left) + 'px';
+    doveLink.style.top = (y0 - hr.top) + 'px';
+    doveLink.style.width = (x1 - x0) + 'px';
+    doveLink.style.height = (y1 - y0) + 'px';
+    doveLink.classList.add('on');
+    heroEl.classList.add('dove-ready');
+  }
+  function updateDove(final) {
+    if (!doveLink || !heroEl) return;
+    const now = performance.now();
+    if (!final && now - lastLocate < 450) return;
+    lastLocate = now;
+    const w = canvas.width, h = canvas.height;
+    if (w < 2 || h < 2) return;
+    try {
+      if (!locBuf || locBuf.length !== w * h * 4) locBuf = new Uint8Array(w * h * 4);
+      gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, locBuf);
+    } catch (e) { return; }
+    const cols = new Uint32Array(w), rows = new Uint32Array(h);
+    let n = 0;
+    for (let y = 0; y < h; y += 2) {
+      const base = y * w * 4;
+      for (let x = 0; x < w; x += 2) {
+        const i = base + x * 4;
+        if (locBuf[i + 3] >= 100 && locBuf[i] >= 232 && locBuf[i + 1] >= 232 && locBuf[i + 2] >= 232) {
+          cols[x]++; rows[y]++; n++;
+        }
+      }
+    }
+    if (n < 150) return;
+    const cx = spanOf(cols, n, 0.02, 0.98);
+    const cy = spanOf(rows, n, 0.02, 0.98);
+    // readPixels cuenta las filas desde abajo; se pasa a coordenadas desde arriba
+    doveBox = { w: w, h: h, x0: cx[0], x1: cx[1] + 1, y0: h - (cy[1] + 1), y1: h - cy[0] };
+    placeDove();
+  }
+  window.addEventListener('resize', placeDove);
+
   colorVideo.addEventListener('ended', freeze);
   colorVideo.addEventListener('timeupdate', function () {
+    updateDove(false);
     if (Number.isFinite(colorVideo.duration) &&
         colorVideo.duration > 0 &&
         colorVideo.currentTime >= colorVideo.duration - 0.04) {
@@ -2918,6 +3051,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function startWhenReady() {
+    if (!delayDone) { if (colorVideo.readyState >= 2 && maskVideo.readyState >= 2) drawFrame(); return; }
     if (started || colorVideo.readyState < 2 || maskVideo.readyState < 2) return;
     started = true;
     drawFrame();
@@ -2937,7 +3071,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Safari iOS solo acepta touchend/click como gesto valido para iniciar video
   // (pointerdown NO cuenta). Tambien pasa con el Modo de bajo consumo activado.
   function playFromGesture() {
-    if (frozen || colorVideo.ended || !colorVideo.paused) return;
+    if (!delayDone || frozen || colorVideo.ended || !colorVideo.paused) return;
     if (colorVideo.readyState < 2 || maskVideo.readyState < 2) {
       try { colorVideo.load(); maskVideo.load(); } catch (e) {}
     }
@@ -2956,7 +3090,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Si la pagina vuelve a estar visible (cambio de pestana) y el video quedo pausado, reintentar.
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible' && !frozen && !colorVideo.ended && colorVideo.paused) {
+    if (delayDone && document.visibilityState === 'visible' && !frozen && !colorVideo.ended && colorVideo.paused) {
       Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
         if (raf) cancelAnimationFrame(raf);
         render();
@@ -2964,9 +3098,44 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  // El video arranca 1 segundo despues de entrar a la pagina.
+  setTimeout(function () { delayDone = true; startWhenReady(); }, 1000);
   if (colorVideo.readyState >= 2 && maskVideo.readyState >= 2) startWhenReady();
 });
 </script>
 
+<script id="contador-1600-js">
+(function(){
+  var els=document.querySelectorAll('[data-count]');
+  if(!els.length) return;
+  var reduce=window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function run(el){
+    var end=+el.getAttribute('data-count'), prefix=el.getAttribute('data-prefix')||'', dur=2200, t0=null;
+    if(reduce){ el.textContent=prefix+end; el.classList.add('count-done'); return; }
+    el.textContent=prefix+'0';
+    function step(ts){
+      if(t0===null) t0=ts;
+      var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=prefix+Math.round(end*e);
+      if(p<1) requestAnimationFrame(step); else el.classList.add('count-done');
+    }
+    requestAnimationFrame(step);
+  }
+  els.forEach(function(el){
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(x){ if(x.isIntersecting){ io.disconnect(); run(el); } });
+      },{threshold:.3});
+      io.observe(el);
+    } else { run(el); }
+  });
+})();
+</script>
+<script id="paloma-respaldo">
+setTimeout(function(){
+  var h=document.querySelector('.hero');
+  if(h && !h.classList.contains('dove-ready')) h.classList.add('dove-failed');
+},15000);
+</script>
 </body>
 </html>
