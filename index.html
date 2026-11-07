@@ -2922,6 +2922,7 @@ document.addEventListener('DOMContentLoaded', function () {
     started = true;
     drawFrame();
     Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
+      if (raf) cancelAnimationFrame(raf);
       render();
     }).catch(function (error) {
       started = false;
@@ -2933,21 +2934,35 @@ document.addEventListener('DOMContentLoaded', function () {
   colorVideo.addEventListener('canplay', startWhenReady);
   maskVideo.addEventListener('canplay', startWhenReady);
 
-  // Safari iOS puede exigir un gesto real si bloquea el autoplay inicial.
-  const heroTapTarget = document.querySelector('.hero');
-  if (heroTapTarget) {
-    heroTapTarget.addEventListener('pointerdown', function tryPlayFromGesture() {
-      if (started || colorVideo.ended) return;
+  // Safari iOS solo acepta touchend/click como gesto valido para iniciar video
+  // (pointerdown NO cuenta). Tambien pasa con el Modo de bajo consumo activado.
+  function playFromGesture() {
+    if (frozen || colorVideo.ended || !colorVideo.paused) return;
+    if (colorVideo.readyState < 2 || maskVideo.readyState < 2) {
+      try { colorVideo.load(); maskVideo.load(); } catch (e) {}
+    }
+    Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
       started = true;
-      Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
-        drawFrame();
-        render();
-      }).catch(function (error) {
-        started = false;
-        console.warn('Safari no pudo iniciar los videos tras la interacción:', error);
-      });
-    }, { passive:true });
+      if (raf) cancelAnimationFrame(raf);
+      drawFrame();
+      render();
+    }).catch(function (error) {
+      console.warn('Safari no pudo iniciar los videos tras la interaccion:', error);
+    });
   }
+  ['touchend', 'click', 'keydown'].forEach(function (evt) {
+    document.addEventListener(evt, playFromGesture, { passive:true });
+  });
+
+  // Si la pagina vuelve a estar visible (cambio de pestana) y el video quedo pausado, reintentar.
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && !frozen && !colorVideo.ended && colorVideo.paused) {
+      Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
+        if (raf) cancelAnimationFrame(raf);
+        render();
+      }).catch(function () {});
+    }
+  });
 
   if (colorVideo.readyState >= 2 && maskVideo.readyState >= 2) startWhenReady();
 });
