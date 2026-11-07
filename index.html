@@ -2159,36 +2159,18 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 </style>
 
 <style id="paloma-boton">
-/* Boton verde fuera. Solo reaparece si la paloma no logra activarse (video bloqueado). */
+/* Boton verde fuera. Solo reaparece si el video no logra reproducirse. */
 .mobile-family-btn{display:none !important;}
 .hero.dove-failed .mobile-family-btn{display:flex !important;}
 
+/* La paloma es el boton: zona tocable invisible y fija sobre el brillo del video. */
 .dove-link{
   position:absolute;z-index:40;display:block;left:0;top:0;width:0;height:0;
-  opacity:0;pointer-events:none;border-radius:42%;text-decoration:none;
-  -webkit-tap-highlight-color:transparent;
-  transition:opacity .6s ease,left .35s ease,top .35s ease,width .35s ease,height .35s ease;
+  background:transparent;border:0;cursor:pointer;text-decoration:none;
+  -webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;
 }
-.dove-link.on{opacity:1;pointer-events:auto;cursor:pointer;}
-.dove-link:active{transform:scale(.97);}
-.dove-ring{
-  position:absolute;inset:-4px;border-radius:inherit;pointer-events:none;
-  border:2px solid rgba(255,255,255,.9);
-  box-shadow:0 0 16px rgba(255,255,255,.9),0 0 34px rgba(51,204,255,.55);
-  animation:doveRing 2.1s ease-out infinite;
-}
-@keyframes doveRing{0%{transform:scale(.9);opacity:.95}100%{transform:scale(1.25);opacity:0}}
-.dove-label{
-  position:absolute;left:50%;top:calc(100% + 12px);transform:translateX(-50%);
-  white-space:nowrap;font-family:var(--FB);font-size:10px;font-weight:800;line-height:1;
-  letter-spacing:1.6px;text-transform:uppercase;color:#287fd4;
-  padding:8px 14px;border-radius:999px;
-  background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.85);
-  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-  box-shadow:0 6px 18px rgba(24,32,43,.16),inset 0 1px 0 rgba(255,255,255,.9);
-  pointer-events:none;
-}
-@media(prefers-reduced-motion:reduce){.dove-ring{animation:none}}
+/* Para ver la zona: abre la pagina con ?zona=1 al final del enlace */
+.dove-link.dove-debug{outline:2px dashed #ff2d2d;background:rgba(255,45,45,.18);}
 </style>
 </head>
 <body>
@@ -2283,10 +2265,7 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
     </div>
   </div>
   <!-- PALOMA = BOTON DE ACCESO (se posiciona solo sobre el brillo del video) -->
-  <a class="dove-link" href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" rel="noopener noreferrer" aria-label="Unirme a la familia en Telegram">
-    <span class="dove-ring"></span>
-    <span class="dove-label">Toca para unirte</span>
-  </a>
+  <a class="dove-link" href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" rel="noopener noreferrer" aria-label="Unirme a la familia en Telegram"></a>
 </section>
 
 
@@ -2922,9 +2901,6 @@ document.addEventListener('DOMContentLoaded', function () {
   let frozen = false;
   let lastDraw = 0;
   let delayDone = false;   // el video arranca 1 segundo despues de entrar
-  let doveBox = null;      // zona de la paloma en coordenadas del video
-  let lastLocate = 0;
-  let locBuf = null;
   const doveLink = document.querySelector('.dove-link');
   const heroEl = document.querySelector('.hero');
 
@@ -2953,6 +2929,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function render() {
+    if (heroEl) heroEl.classList.add("dove-ready");
     if (frozen) return;
     if (Math.abs(colorVideo.currentTime - maskVideo.currentTime) > 0.06 &&
         !maskVideo.ended) {
@@ -2967,82 +2944,45 @@ document.addEventListener('DOMContentLoaded', function () {
   function freeze() {
     if (frozen) return;
     drawFrame();
-    updateDove(true);
     frozen = true;
     if (raf) cancelAnimationFrame(raf);
     colorVideo.pause();
     maskVideo.pause();
   }
 
-  // ---- Paloma: detecta el brillo blanco del video y pone el boton encima ----
-  function spanOf(arr, total, lo, hi) {
-    let acc = 0, a = 0, b = arr.length - 1, gotA = false;
-    for (let i = 0; i < arr.length; i++) {
-      acc += arr[i];
-      if (!gotA && acc >= total * lo) { a = i; gotA = true; }
-      if (acc >= total * hi) { b = i; break; }
-    }
-    return [a, b];
-  }
+  // ---- Paloma = boton de acceso: zona fija e invisible ----
+  // Coordenadas como fraccion del cuadro del video (0 a 1), medidas sobre el personaje.
+  const DOVE = { x0: 0.00, x1: 0.46, y0: 0.68, y1: 0.855 };
   function placeDove() {
-    if (!doveBox || !doveLink || !heroEl) return;
+    if (!doveLink || !heroEl) return;
     const r = canvas.getBoundingClientRect();
     const hr = heroEl.getBoundingClientRect();
-    const s = Math.min(r.width / doveBox.w, r.height / doveBox.h);
-    const ox = r.left, oy = r.top + (r.height - doveBox.h * s); // object-position: left bottom
-    let x0 = ox + doveBox.x0 * s, x1 = ox + doveBox.x1 * s;
-    let y0 = oy + doveBox.y0 * s, y1 = oy + doveBox.y1 * s;
-    const padX = Math.max(10, (x1 - x0) * 0.08), padY = Math.max(10, (y1 - y0) * 0.12);
-    x0 -= padX; x1 += padX; y0 -= padY; y1 += padY;
-    const minW = 90, minH = 70;
-    if (x1 - x0 < minW) { const c = (x0 + x1) / 2; x0 = c - minW / 2; x1 = c + minW / 2; }
-    if (y1 - y0 < minH) { const c = (y0 + y1) / 2; y0 = c - minH / 2; y1 = c + minH / 2; }
-    x0 = Math.max(x0, hr.left + 4);
-    x1 = Math.min(x1, hr.right - 4, window.innerWidth - 4);
+    if (!r.width || !r.height) return;
+    const fw = colorVideo.videoWidth || 720, fh = colorVideo.videoHeight || 1280;
+    const s = Math.min(r.width / fw, r.height / fh);
+    const ox = r.left, oy = r.top + (r.height - fh * s); // object-position: left bottom
+    let x0 = ox + DOVE.x0 * fw * s, x1 = ox + DOVE.x1 * fw * s;
+    let y0 = oy + DOVE.y0 * fh * s, y1 = oy + DOVE.y1 * fh * s;
+    x0 = Math.max(x0, hr.left);
+    x1 = Math.min(x1, hr.right, window.innerWidth);
     y0 = Math.max(y0, hr.top);
-    y1 = Math.min(y1, hr.bottom - 4);
-    if (x1 - x0 < 30 || y1 - y0 < 30) return;
+    y1 = Math.min(y1, hr.bottom);
+    if (x1 - x0 < 20 || y1 - y0 < 20) return;
     doveLink.style.left = (x0 - hr.left) + 'px';
     doveLink.style.top = (y0 - hr.top) + 'px';
     doveLink.style.width = (x1 - x0) + 'px';
     doveLink.style.height = (y1 - y0) + 'px';
-    doveLink.classList.add('on');
-    heroEl.classList.add('dove-ready');
   }
-  function updateDove(final) {
-    if (!doveLink || !heroEl) return;
-    const now = performance.now();
-    if (!final && now - lastLocate < 450) return;
-    lastLocate = now;
-    const w = canvas.width, h = canvas.height;
-    if (w < 2 || h < 2) return;
-    try {
-      if (!locBuf || locBuf.length !== w * h * 4) locBuf = new Uint8Array(w * h * 4);
-      gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, locBuf);
-    } catch (e) { return; }
-    const cols = new Uint32Array(w), rows = new Uint32Array(h);
-    let n = 0;
-    for (let y = 0; y < h; y += 2) {
-      const base = y * w * 4;
-      for (let x = 0; x < w; x += 2) {
-        const i = base + x * 4;
-        if (locBuf[i + 3] >= 100 && locBuf[i] >= 232 && locBuf[i + 1] >= 232 && locBuf[i + 2] >= 232) {
-          cols[x]++; rows[y]++; n++;
-        }
-      }
-    }
-    if (n < 150) return;
-    const cx = spanOf(cols, n, 0.02, 0.98);
-    const cy = spanOf(rows, n, 0.02, 0.98);
-    // readPixels cuenta las filas desde abajo; se pasa a coordenadas desde arriba
-    doveBox = { w: w, h: h, x0: cx[0], x1: cx[1] + 1, y0: h - (cy[1] + 1), y1: h - cy[0] };
-    placeDove();
-  }
+  if (/[?&]zona=1/.test(location.search) && doveLink) doveLink.classList.add('dove-debug');
   window.addEventListener('resize', placeDove);
+  window.addEventListener('orientationchange', placeDove);
+  window.addEventListener('load', placeDove);
+  colorVideo.addEventListener('loadedmetadata', placeDove);
+  if (window.ResizeObserver && heroEl) new ResizeObserver(placeDove).observe(heroEl);
+  placeDove();
 
   colorVideo.addEventListener('ended', freeze);
   colorVideo.addEventListener('timeupdate', function () {
-    updateDove(false);
     if (Number.isFinite(colorVideo.duration) &&
         colorVideo.duration > 0 &&
         colorVideo.currentTime >= colorVideo.duration - 0.04) {
