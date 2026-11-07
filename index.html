@@ -2045,7 +2045,8 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 </style>
 
 <style id="hero-character-video-sources">
-/* Fuentes ocultas: el canvas muestra únicamente el personaje con alfa real. */
+/* Las fuentes permanecen dentro del escenario para favorecer la decodificación móvil.
+   El canvas transparente se dibuja encima y es la única capa perceptible. */
 .hero-character-source,.hero-character-mask{
   position:absolute !important;
   width:2px !important;
@@ -2055,6 +2056,18 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   opacity:0 !important;
   pointer-events:none !important;
   z-index:-1 !important;
+}
+@media(max-width:768px){
+  .hero-character-source,.hero-character-mask{
+    width:100% !important;
+    height:100% !important;
+    left:0 !important;
+    top:0 !important;
+    object-fit:contain !important;
+    opacity:.001 !important;
+    z-index:1 !important;
+  }
+  .hero-character-video{z-index:2 !important;}
 }
 </style>
 
@@ -2098,6 +2111,19 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
   }
 }
 </style>
+
+<style id="mobile-final-navigation-fixes">
+@media (max-width:768px) {
+  /* La navegación inferior se elimina únicamente en móvil. */
+  .mobile-bottom-nav { display:none !important; }
+
+  /* En móvil, Rastro/testimonios deja de mostrarse. */
+  #testimonios { display:none !important; }
+
+  /* El enlace superior MENSAJE conserva su destino independiente de escritorio. */
+  .nav-pill a[data-mobile-target] { cursor:pointer; }
+}
+</style>
 </head>
 <body>
 
@@ -2110,7 +2136,7 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 
   <div class="nav-pill">
     <a href="#inicio" class="active">INICIO</a>
-    <a href="#testimonios"><span class="nav-label-desktop">Testimonios</span><span class="nav-label-mobile">RASTRO</span></a>
+    <a href="#testimonios" data-mobile-target="#mensaje"><span class="nav-label-desktop">Testimonios</span><span class="nav-label-mobile">MENSAJE</span></a>
   </div>
 
   <div style="display:flex;align-items:center;gap:16px">
@@ -2140,10 +2166,10 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
     <div class="hero-visual-stage">
       <!-- Personaje con transparencia compuesta desde color + máscara alfa -->
       <canvas class="hero-character-video" aria-hidden="true"></canvas>
-      <video class="hero-character-source" muted playsinline preload="auto" aria-hidden="true">
+      <video class="hero-character-source" autoplay muted playsinline webkit-playsinline preload="auto" aria-hidden="true">
         <source src="videos/DIOSESGRANDE_color.mp4" type="video/mp4">
       </video>
-      <video class="hero-character-mask" muted playsinline preload="auto" aria-hidden="true">
+      <video class="hero-character-mask" autoplay muted playsinline webkit-playsinline preload="auto" aria-hidden="true">
         <source src="videos/DIOSESGRANDE_alpha.mp4" type="video/mp4">
       </video>
       <div class="hero-dots-back"></div>
@@ -2166,13 +2192,6 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
         </span>
         UNIRME A LA FAMILIA
       </a>
-      <div class="mobile-bottom-nav" aria-label="Navegación principal">
-        <a href="#inicio">FE</a>
-        <span></span>
-        <a href="#testimonios">DIOS</a>
-        <span></span>
-        <a href="#testimonios">PROPÓSITO</a>
-      </div>
     </div>
 
     <!-- Contenido centrado encima (se conserva para PC; la nueva composición móvil lo sustituye) -->
@@ -2246,7 +2265,7 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 </section>
 
 <!-- CTA -->
-<section class="cta">
+<section class="cta" id="mensaje">
   <div class="cta-glow"></div>
   <h2 style="color:#FFFFFF">EL MOMENTO<br>ES <span class="c">AHORA</span></h2>
   <p class="cta-bible-quote">«Encomienda al Señor tus obras,<br>y tus planes se cumplirán.»</p>
@@ -2304,7 +2323,11 @@ const navLinks = document.querySelectorAll('.nav-pill a');
 // Navegación con desplazamiento cinematográfico y llegada sutil a la sección.
 document.querySelectorAll('.nav-pill a[href^="#"], .mobile-bottom-nav a[href^="#"]').forEach(link => {
   link.addEventListener('click', event => {
-    const target = document.querySelector(link.getAttribute('href'));
+    const isMobile = window.matchMedia('(max-width:768px)').matches;
+    const destination = (isMobile && link.dataset.mobileTarget)
+      ? link.dataset.mobileTarget
+      : link.getAttribute('href');
+    const target = document.querySelector(destination);
     if (!target) return;
     event.preventDefault();
 
@@ -2335,7 +2358,7 @@ document.querySelectorAll('.nav-pill a[href^="#"], .mobile-bottom-nav a[href^="#
       }
     }
     requestAnimationFrame(animateScroll);
-    history.replaceState(null, '', link.getAttribute('href'));
+    history.replaceState(null, '', destination);
   });
 });
 window.addEventListener('scroll', () => {
@@ -2898,6 +2921,22 @@ document.addEventListener('DOMContentLoaded', function () {
   maskVideo.addEventListener('loadeddata', startWhenReady);
   colorVideo.addEventListener('canplay', startWhenReady);
   maskVideo.addEventListener('canplay', startWhenReady);
+
+  // Safari iOS puede exigir un gesto real si bloquea el autoplay inicial.
+  const heroTapTarget = document.querySelector('.hero');
+  if (heroTapTarget) {
+    heroTapTarget.addEventListener('pointerdown', function tryPlayFromGesture() {
+      if (started || colorVideo.ended) return;
+      started = true;
+      Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
+        drawFrame();
+        render();
+      }).catch(function (error) {
+        started = false;
+        console.warn('Safari no pudo iniciar los videos tras la interacción:', error);
+      });
+    }, { passive:true });
+  }
 
   if (colorVideo.readyState >= 2 && maskVideo.readyState >= 2) startWhenReady();
 });
