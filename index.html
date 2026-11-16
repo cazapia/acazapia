@@ -3031,7 +3031,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function startWhenReady() {
     if (!delayDone) { if (colorVideo.readyState >= 2 && maskVideo.readyState >= 2) drawFrame(); return; }
-    if (started || colorVideo.readyState < 2 || maskVideo.readyState < 2) return;
+    // iPhone no carga el video hasta recibir play(): no hay que esperar a que este listo.
+    if (started) return;
     started = true;
     colorVideo.muted = maskVideo.muted = true;
     colorVideo.defaultMuted = maskVideo.defaultMuted = true;
@@ -3055,9 +3056,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // (pointerdown NO cuenta). Tambien pasa con el Modo de bajo consumo activado.
   function playFromGesture() {
     if (!delayDone || frozen || colorVideo.ended || !colorVideo.paused) return;
-    if (colorVideo.readyState < 2 || maskVideo.readyState < 2) {
-      try { colorVideo.load(); maskVideo.load(); } catch (e) {}
-    }
     Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
       started = true;
       if (raf) cancelAnimationFrame(raf);
