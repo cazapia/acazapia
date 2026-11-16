@@ -2227,6 +2227,7 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
     <!-- ESCENARIO 3D: todas las capas comparten exactamente el mismo marco -->
     <div class="hero-visual-stage">
       <!-- Personaje con transparencia compuesta desde color + máscara alfa -->
+      <img class="hero-character-video hero-poster" src="images/personaje.webp" alt="" aria-hidden="true" decoding="async" fetchpriority="high" onerror="this.remove()">
       <canvas class="hero-character-video" aria-hidden="true"></canvas>
       <video class="hero-character-source" muted playsinline webkit-playsinline preload="auto" aria-hidden="true">
         <source src="videos/DIOSESGRANDE_color.mp4" type="video/mp4">
@@ -2493,6 +2494,7 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
   let W = 1, H = 1;
   let particlesBack = [];
   let particlesFront = [];
+  let heroVisible = true, idle = false;
   let lastTime = performance.now();
   let raf = 0;
 
@@ -2771,7 +2773,26 @@ const silhouetteImg = document.querySelector('.hero-silhouette img');
     drawParticles(backCtx,particlesBack);
     drawParticles(frontCtx,particlesFront);
 
-    raf = requestAnimationFrame(frame);
+    if (!document.hidden && heroVisible) raf = requestAnimationFrame(frame);
+    else idle = true;
+  }
+
+  // Ahorro de bateria: no animar particulas si el hero no esta en pantalla.
+  function wake(){
+    if (idle && !document.hidden && heroVisible){
+      idle = false;
+      lastTime = performance.now();
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(frame);
+    }
+  }
+  document.addEventListener('visibilitychange', wake);
+  const heroForObserver = document.querySelector('.hero');
+  if ('IntersectionObserver' in window && heroForObserver){
+    new IntersectionObserver(function(entries){
+      heroVisible = entries[0].isIntersecting;
+      wake();
+    }, { threshold: 0 }).observe(heroForObserver);
   }
 
   function start(){
@@ -2917,6 +2938,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let delayDone = false;   // el video arranca 1 segundo despues de entrar
   const doveLink = document.querySelector('.dove-link');
   const heroEl = document.querySelector('.hero');
+  let posterEl = document.querySelector('.hero-poster');
 
   function uploadTexture(texture, video, unit) {
     gl.activeTexture(gl.TEXTURE0 + unit);
@@ -2940,6 +2962,7 @@ document.addEventListener('DOMContentLoaded', function () {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     lastDraw = performance.now();
+    if (posterEl) { posterEl.remove(); posterEl = null; }
   }
 
   function render() {
@@ -3090,6 +3113,21 @@ setTimeout(function(){
   var h=document.querySelector('.hero');
   if(h && !h.classList.contains('dove-ready')) h.classList.add('dove-failed');
 },15000);
+</script>
+<script id="medicion-telegram">
+(function(){
+  function boton(a){
+    if (a.classList.contains('dove-link')) return 'paloma';
+    if (a.classList.contains('cta-family-btn')) return 'boton_final';
+    if (a.classList.contains('mobile-family-btn')) return 'boton_verde_respaldo';
+    return 'otro';
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href*="t.me"]');
+    if (!a || typeof gtag !== 'function') return;
+    gtag('event', 'unirme_telegram', { boton: boton(a), transport_type: 'beacon' });
+  }, true);
+})();
 </script>
 </body>
 </html>
