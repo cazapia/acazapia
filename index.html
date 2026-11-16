@@ -2159,10 +2159,6 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 </style>
 
 <style id="paloma-boton">
-/* Boton verde fuera. Solo reaparece si el video no logra reproducirse. */
-.mobile-family-btn{display:none !important;}
-.hero.dove-failed .mobile-family-btn{display:flex !important;}
-
 /* La paloma es el boton: zona tocable invisible y fija sobre el brillo del video. */
 .dove-link{
   position:absolute;z-index:40;display:block;left:0;top:0;width:0;height:0;
@@ -2249,12 +2245,6 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
           <span>en 30 días</span>
         </div>
       </div>
-      <a href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" rel="noopener" class="mobile-family-btn">
-        <span class="mobile-family-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" role="img" aria-label="Telegram"><path d="M21.7 2.3 18.6 21c-.2 1.3-.9 1.6-1.9 1l-5.2-3.8-2.5 2.4c-.3.3-.6.6-1.2.6l.4-5.3 9.7-8.8c.4-.4-.1-.6-.7-.2L5.2 14.4.1 12.8c-1.1-.3-1.1-1.1.2-1.6L20.1 3c.9-.3 1.8.2 1.6 1.3Z"/></svg>
-        </span>
-        UNIRME A LA FAMILIA
-      </a>
       <div class="mobile-count" aria-label="Más de 1600 emprendedores"><strong data-count="1600" data-prefix="+">+1600</strong><span>emprendedores</span></div>
     </div>
 
@@ -3135,18 +3125,11 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 })();
 </script>
-<script id="paloma-respaldo">
-setTimeout(function(){
-  var h=document.querySelector('.hero');
-  if(h && !h.classList.contains('dove-ready')) h.classList.add('dove-failed');
-},15000);
-</script>
 <script id="medicion-telegram">
 (function(){
   function boton(a){
     if (a.classList.contains('dove-link')) return 'paloma';
     if (a.classList.contains('cta-family-btn')) return 'boton_final';
-    if (a.classList.contains('mobile-family-btn')) return 'boton_verde_respaldo';
     return 'otro';
   }
   document.addEventListener('click', function(e){
