@@ -2935,6 +2935,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let started = false;
   let frozen = false;
   let lastDraw = 0;
+  let lastPlayError = '';
+  let autoRetries = 0;
   let delayDone = false;   // el video arranca 1 segundo despues de entrar
   const doveLink = document.querySelector('.dove-link');
   const heroEl = document.querySelector('.hero');
@@ -3031,13 +3033,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!delayDone) { if (colorVideo.readyState >= 2 && maskVideo.readyState >= 2) drawFrame(); return; }
     if (started || colorVideo.readyState < 2 || maskVideo.readyState < 2) return;
     started = true;
+    colorVideo.muted = maskVideo.muted = true;
+    colorVideo.defaultMuted = maskVideo.defaultMuted = true;
     drawFrame();
     Promise.all([colorVideo.play(), maskVideo.play()]).then(function () {
       if (raf) cancelAnimationFrame(raf);
       render();
     }).catch(function (error) {
       started = false;
+      lastPlayError = (error && (error.name + ': ' + error.message)) || String(error);
       console.warn('No se pudo iniciar el video automáticamente:', error);
+      if (++autoRetries <= 5) setTimeout(startWhenReady, 600 * autoRetries);
     });
   }
   colorVideo.addEventListener('loadeddata', startWhenReady);
@@ -3058,6 +3064,7 @@ document.addEventListener('DOMContentLoaded', function () {
       drawFrame();
       render();
     }).catch(function (error) {
+      lastPlayError = 'gesto: ' + ((error && (error.name + ': ' + error.message)) || String(error));
       console.warn('Safari no pudo iniciar los videos tras la interaccion:', error);
     });
   }
@@ -3074,6 +3081,28 @@ document.addEventListener('DOMContentLoaded', function () {
       }).catch(function () {});
     }
   });
+
+  // Diagnostico: abre la pagina con ?debug=1 para ver el estado de los videos en pantalla.
+  if (/[?&]debug=1/.test(location.search)) {
+    const box = document.createElement('div');
+    box.style.cssText = 'position:fixed;left:6px;top:6px;right:6px;z-index:99999;background:rgba(0,0,0,.82);color:#9fff9f;font:11px/1.35 monospace;padding:8px;border-radius:8px;pointer-events:none;white-space:pre-wrap;word-break:break-word;';
+    document.body.appendChild(box);
+    const vs = function (v) {
+      return 'rs=' + v.readyState + ' ns=' + v.networkState + ' paused=' + v.paused +
+             ' t=' + v.currentTime.toFixed(2) + ' dur=' + (v.duration || 0).toFixed(2) +
+             ' err=' + (v.error ? v.error.code + ':' + v.error.message : 'no');
+    };
+    setInterval(function () {
+      const c = navigator.connection || {};
+      box.textContent =
+        'COLOR  ' + vs(colorVideo) + '\n' +
+        'MASK   ' + vs(maskVideo) + '\n' +
+        'started=' + started + ' delayDone=' + delayDone + ' frozen=' + frozen + ' reintentos=' + autoRetries + '\n' +
+        'ultimo error play(): ' + (lastPlayError || 'ninguno') + '\n' +
+        'red: ' + (c.effectiveType || '?') + ' ahorroDatos=' + (c.saveData === undefined ? '?' : c.saveData) + '\n' +
+        'hero clases: ' + (heroEl ? heroEl.className : '?');
+    }, 400);
+  }
 
   // El video arranca 1 segundo despues de entrar a la pagina.
   setTimeout(function () { delayDone = true; startWhenReady(); }, 1000);
