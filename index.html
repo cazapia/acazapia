@@ -17,6 +17,13 @@
 <title>M1MILLON · Cazapia | Aprende a Vender en Automático</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="preload" href="videos/DIOSESGRANDE_color.mp4" as="video" type="video/mp4">
+<link rel="preload" href="videos/DIOSESGRANDE_alpha.mp4" as="video" type="video/mp4">
+<script>
+/* Los textos del hero esperan al personaje para aparecer juntos (maximo 2.8 s). */
+document.documentElement.classList.add('hero-loading');
+setTimeout(function(){document.documentElement.classList.remove('hero-loading');},2800);
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -2273,6 +2280,11 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 /* Sombra paralela difuminada para la corona (respeta la forma del icono) */
 nav .logo img{filter:drop-shadow(0 4px 9px rgba(12,38,84,.50)) drop-shadow(0 1px 2px rgba(12,38,84,.30));}
 </style>
+<style id="hero-reveal">
+.mobile-hero-ui{transition:opacity .7s ease;}
+.hero-loading .mobile-hero-ui{opacity:0;}
+.hero-loading .dove-link{pointer-events:none;}
+</style>
 </head>
 <body>
 
@@ -3043,6 +3055,7 @@ document.addEventListener('DOMContentLoaded', function () {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     lastDraw = performance.now();
+    document.documentElement.classList.remove('hero-loading');
   }
 
   function render() {
@@ -3205,10 +3218,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     requestAnimationFrame(step);
   }
+  function whenRevealed(cb){
+    var h=document.documentElement;
+    if(!h.classList.contains('hero-loading')) return cb();
+    var mo=new MutationObserver(function(){ if(!h.classList.contains('hero-loading')){ mo.disconnect(); setTimeout(cb,150); } });
+    mo.observe(h,{attributes:true,attributeFilter:['class']});
+  }
   els.forEach(function(el){
     if('IntersectionObserver' in window){
       var io=new IntersectionObserver(function(entries){
-        entries.forEach(function(x){ if(x.isIntersecting){ io.disconnect(); run(el); } });
+        entries.forEach(function(x){ if(x.isIntersecting){ io.disconnect(); whenRevealed(function(){ run(el); }); } });
       },{threshold:.3});
       io.observe(el);
     } else { run(el); }
