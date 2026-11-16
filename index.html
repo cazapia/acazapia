@@ -2211,7 +2211,7 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 }
 
 /* El "30" mas grueso */
-.mobile-goal .goal-30{font-weight:900;-webkit-text-stroke:1.5px currentColor;letter-spacing:.6px;}
+.mobile-goal .goal-30{font-weight:900;-webkit-text-stroke:.6px currentColor;letter-spacing:.4px;}
 
 /* Pastilla +1600: letras en blanco */
 .mobile-count,.mobile-count strong,.mobile-count span{color:#fff !important;}
@@ -2220,6 +2220,47 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 @media(prefers-reduced-motion:reduce){
   .mobile-goal{animation:none;}
   .mobile-goal::after,.mobile-count::after{animation:none;}
+}
+</style>
+<style id="ajustes-v3">
+/* "EN 30 DIAS" en blanco con sombra paralela difuminada */
+.mobile-goal span,.mobile-goal .goal-30{color:#fff !important;}
+.mobile-goal span{text-shadow:0 3px 9px rgba(18,52,104,.60),0 1px 3px rgba(18,52,104,.35) !important;}
+
+/* RETO EN VIVO: mismo brillo recorriendo el contorno (cola rojiza para combinar) */
+.mobile-live::after{
+  content:"";position:absolute;inset:-1.5px;border-radius:inherit;padding:2.4px;pointer-events:none;
+  background:conic-gradient(from var(--ang),
+    transparent 0deg, transparent 215deg,
+    rgba(255,140,120,.35) 270deg, rgba(255,190,170,.95) 322deg,
+    #ffffff 346deg, rgba(255,255,255,0) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  filter:drop-shadow(0 0 5px rgba(255,120,100,.9));
+  animation:bordeGira 3.4s linear infinite;
+}
+@media(prefers-reduced-motion:reduce){.mobile-live::after{animation:none;}}
+
+/* VISTA DE PC */
+@media(min-width:769px){
+  /* Cuadro 1MILLON al centro */
+  .mobile-main-row{justify-content:center !important;}
+  .mobile-character-space{display:none !important;}
+
+  /* Pastilla +1600 (antes solo tenia estilo en celular y se veia suelta arriba) */
+  .mobile-count{
+    position:absolute;left:50%;top:67%;transform:translateX(-50%);
+    display:flex;align-items:baseline;gap:10px;padding:9px 26px 10px;
+    border-radius:999px;border:1.5px solid rgba(48,132,218,.78);
+    background:rgba(255,255,255,.34);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    white-space:nowrap;pointer-events:none;
+    box-shadow:0 5px 20px rgba(45,125,205,.12),inset 0 1px 0 rgba(255,255,255,.75);
+  }
+  .mobile-count strong{font-family:var(--FD);font-size:38px;line-height:1;letter-spacing:.5px;min-width:2.7ch;text-align:right}
+  .mobile-count span{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
 }
 </style>
 </head>
