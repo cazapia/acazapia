@@ -2223,9 +2223,15 @@ section.section-arrival { animation: sectionArrivalSoft .52s ease-out both; }
 }
 </style>
 <style id="ajustes-v3">
-/* "EN 30 DIAS" en blanco con sombra paralela difuminada */
+/* "EN 30 DIAS" en blanco, sin sombra */
 .mobile-goal span,.mobile-goal .goal-30{color:#fff !important;}
-.mobile-goal span{text-shadow:0 3px 9px rgba(18,52,104,.60),0 1px 3px rgba(18,52,104,.35) !important;}
+.mobile-goal span,.mobile-goal .goal-30{text-shadow:none !important;}
+
+/* S/ 100 000: texto mas largo (letra mas chica en celular) y sombra suave */
+.mobile-goal strong{text-shadow:0 3px 7px rgba(22,77,137,.22) !important;}
+@media(max-width:768px){
+  .mobile-goal strong{font-size:clamp(20px,6.4vw,32px) !important;letter-spacing:.3px !important;}
+}
 
 /* RETO EN VIVO: mismo brillo recorriendo el contorno (cola rojiza para combinar) */
 .mobile-live::after{
@@ -2325,7 +2331,7 @@ nav .logo img{filter:drop-shadow(0 4px 9px rgba(12,38,84,.50)) drop-shadow(0 1px
       <div class="mobile-main-row">
         <div class="mobile-character-space" aria-hidden="true"></div>
         <div class="mobile-goal">
-          <strong>1MILLON</strong>
+          <strong>S/&nbsp;100&nbsp;000</strong>
           <span>en <b class="goal-30">30</b> días</span>
         </div>
       </div>
