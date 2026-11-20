@@ -2291,7 +2291,7 @@ html { background: #000 !important; }
 html body { background: transparent !important; background-image: none !important; color: #eaf4ff; }
 html body .hero, html body .hero-inner-new { background: transparent !important; }
 html body .hero-visual-stage { background: transparent !important; background-image: none !important; }
-html body .hero-visual-stage::before, html body .hero-visual-stage::after, html body .hero-glow { display: none !important; }
+html body .hero-visual-stage::before, html body .hero-glow { display: none !important; }
 html body .hero-dots-back, html body .hero-dots-front { display: none !important; }
 html body #testimonios, html body #mensaje { background: transparent !important; }
 .cz-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; background: #000; }
@@ -2369,6 +2369,13 @@ html body nav .nav-pill a.nav-alumno { color: #1a1200 !important; font-weight: 9
 html body nav .nav-pill a.nav-alumno:hover { filter: brightness(1.08); }
 @keyframes alumnoGold { to { background-position: -200% center } }
 @media (max-width: 768px) { html body nav .nav-pill a.nav-alumno { padding-left: 12px !important; padding-right: 12px !important; } }
+
+/* Silueta con el mismo efecto que concazapia.com: resplandor azul que respira detrás y desvanecido abajo */
+html body .hero-visual-stage::after { display: block !important; content: ''; position: absolute; z-index: 1; left: -4vh; bottom: 4%; width: 78vh; height: 74%;
+  border-radius: 50%; background: radial-gradient(closest-side, rgba(0,119,182,.42), rgba(3,4,94,.5) 60%, transparent) !important; filter: blur(30px);
+  animation: czBreathe 6s ease-in-out infinite !important; pointer-events: none; inset: auto auto 4% -4vh; }
+@keyframes czBreathe { 50% { transform: scale(1.08); opacity: .8 } }
+html body .hero-character-video { -webkit-mask-image: linear-gradient(#000 80%, transparent); mask-image: linear-gradient(#000 80%, transparent); }
 </style>
 </head>
 <body>
