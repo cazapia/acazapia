@@ -2322,6 +2322,32 @@ html body #testimonios h2 .c { text-shadow: 0 0 30px rgba(0,180,216,.4); }
 html body .testimonial-real { background: rgba(3,4,94,.4) !important; border: 1px solid #123a7a !important; box-shadow: 0 20px 50px -20px rgba(0,0,0,.8) !important; }
 html body .testimonial-city { color: #00b4d8 !important; }
 </style>
+<style id="paloma-texto">
+/* Texto que invita a tocar la paloma (aparece cuando la paloma ya se encendió) */
+.dove-hint { position: absolute; left: 100%; top: 74%; transform: translate(14px, -50%) scale(.96); display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px 10px 12px; border-radius: 999px; white-space: nowrap; pointer-events: none; opacity: 0;
+  background: rgba(3,4,94,.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 0 0 1px rgba(212,175,55,.55), 0 10px 34px -8px rgba(212,175,55,.55);
+  transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+.hero.dove-done .dove-hint { opacity: 1; transform: translate(14px, -50%) scale(1); }
+.dove-hint-arrow { flex-shrink: 0; width: 28px; height: 28px; border-radius: 999px; display: flex; align-items: center; justify-content: center;
+  color: #1a1200; background: linear-gradient(135deg, #9C7417, #D4AF37 40%, #F8E7A1 60%, #D4AF37); animation: doveNudge 1.4s ease-in-out infinite; }
+@keyframes doveNudge { 50% { transform: translateX(-5px) } }
+.dove-hint-text { display: flex; flex-direction: column; line-height: 1.1; font-family: inherit; }
+.dove-hint-text b { font-size: 15px; font-weight: 800; letter-spacing: .02em;
+  background: linear-gradient(90deg, #F8E7A1, #D4AF37, #FFF4C2, #D4AF37); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: doveGold 3s linear infinite; }
+.dove-hint-text span { font-size: 12px; color: #cfdcee; letter-spacing: .03em; }
+@keyframes doveGold { to { background-position: -200% center } }
+html body .hero.dove-done .dove-hint-arrow { animation: doveNudge 1.4s ease-in-out infinite !important; }
+html body .hero.dove-done .dove-hint-text b { animation: doveGold 3s linear infinite !important; }
+@media (max-width: 768px) {
+  .dove-hint { padding: 8px 12px 8px 9px; gap: 8px; }
+  .dove-hint-text b { font-size: 13px; }
+  .dove-hint-text span { font-size: 11px; }
+  .dove-hint-arrow { width: 24px; height: 24px; }
+}
+</style>
 </head>
 <body>
 
@@ -2409,7 +2435,7 @@ html body .testimonial-city { color: #00b4d8 !important; }
     </div>
   </div>
   <!-- PALOMA = BOTON DE ACCESO (se posiciona solo sobre el brillo del video) -->
-  <a class="dove-link" href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" rel="noopener noreferrer" aria-label="Unirme a la familia en Telegram"></a>
+  <a class="dove-link" href="https://t.me/+Q87mXYJyW6A5YzFh" target="_blank" rel="noopener noreferrer" aria-label="Unirme a la familia en Telegram"><span class="dove-hint" aria-hidden="true"><span class="dove-hint-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span><span class="dove-hint-text"><b>Toca la paloma</b><span>para unirte a la familia</span></span></span></a>
 </section>
 
 
@@ -3109,6 +3135,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function freeze() {
+    if (heroEl) heroEl.classList.add('dove-done'); // muestra "Toca la paloma"
     if (frozen) return;
     drawFrame();
     frozen = true;
@@ -3230,6 +3257,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 400);
   }
 
+  setTimeout(function () { if (heroEl) heroEl.classList.add('dove-done'); }, 12500);
   // El video arranca 1 segundo despues de entrar a la pagina.
   setTimeout(function () { delayDone = true; startWhenReady(); }, 1000);
   if (colorVideo.readyState >= 2 && maskVideo.readyState >= 2) startWhenReady();
