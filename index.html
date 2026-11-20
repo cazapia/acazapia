@@ -2355,6 +2355,12 @@ html body .mobile-live { background: linear-gradient(135deg, #ff2d2d, #c40000) !
   box-shadow: 0 0 0 1px rgba(255,107,107,.7), 0 8px 30px -6px rgba(255,45,45,.75) !important; }
 html body .mobile-live * { color: #fff !important; }
 html body .mobile-live .mobile-live-dot { background: #fff !important; box-shadow: 0 0 10px #fff !important; }
+
+/* Corona animada (igual que concazapia.com) con brillo redondo */
+.crown-glow { position: relative; display: inline-flex; isolation: isolate; }
+.crown-glow::before { content: ''; position: absolute; inset: -30%; z-index: -1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0,180,216,.45), rgba(0,119,182,.18) 55%, transparent 75%); filter: blur(6px); pointer-events: none; }
+html body nav .logo img { filter: none !important; }
 </style>
 </head>
 <body>
@@ -2363,7 +2369,7 @@ html body .mobile-live .mobile-live-dot { background: #fff !important; box-shado
 <nav>
 
   <div class="logo">
-    <img src="images/corona.png" alt="Cazapia" width="70" height="70" style="height:70px;width:auto;display:block;">
+    <span class="crown-glow"><img src="images/corona.webp" alt="Cazapia" width="70" height="70" style="height:70px;width:70px;display:block;"></span>
   </div>
 
   <div class="nav-pill">
