@@ -2303,7 +2303,11 @@ html body #testimonios, html body #mensaje { background: transparent !important;
 @keyframes czDrift2 { 50% { transform: translate(-50px, 60px) } }
 .cz-p { position: absolute; bottom: -12px; border-radius: 999px; background: #fff; animation: czRise linear infinite; will-change: transform, opacity; }
 @keyframes czRise { 0% { transform: translate3d(0,0,0); opacity: 0 } 8% { opacity: .9 } 50% { transform: translate3d(var(--d,0px), -55vh, 0) } 90% { opacity: .85 } 100% { transform: translate3d(0, -112vh, 0); opacity: 0 } }
-@media (prefers-reduced-motion: reduce) { .cz-p, .cz-orb { animation-duration: inherit !important; animation-iteration-count: infinite !important; } }
+/* Siempre en movimiento, aunque el equipo tenga 'reducir animaciones' */
+html body .cz-bg .cz-p { animation: czRise var(--t, 20s) linear var(--dl, 0s) infinite !important; }
+html body .cz-bg .cz-orb-1 { animation: czDrift1 16s ease-in-out infinite !important; }
+html body .cz-bg .cz-orb-2 { animation: czDrift2 19s ease-in-out infinite !important; }
+html body .cz-bg .cz-orb-3 { animation: czDrift1 22s ease-in-out infinite reverse !important; }
 
 /* Cabecera y tarjetas en cristal oscuro */
 html body nav .nav-pill { background: rgba(3,4,94,.55) !important; border-color: #123a7a !important; box-shadow: 0 6px 24px rgba(0,0,0,.5) !important; }
@@ -3290,7 +3294,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var r = function (n) { var x = Math.sin(i * 12.9898 + n * 78.233) * 43758.5453; return x - Math.floor(x); };
     var dur = 14 + r(2) * 14, size = 2 + Math.round(r(3) * 4), p = document.createElement('div');
     p.className = 'cz-p';
-    p.style.cssText = 'left:' + (r(1) * 100) + '%;width:' + size + 'px;height:' + size + 'px;box-shadow:0 0 ' + (size * 2) + 'px ' + Math.max(1, Math.floor(size / 2)) + 'px rgba(255,255,255,.7);animation-duration:' + dur + 's;animation-delay:' + (-r(4) * dur) + 's;--d:' + Math.round((r(5) - .5) * 80) + 'px';
+    p.style.cssText = 'left:' + (r(1) * 100) + '%;width:' + size + 'px;height:' + size + 'px;box-shadow:0 0 ' + (size * 2) + 'px ' + Math.max(1, Math.floor(size / 2)) + 'px rgba(255,255,255,.7);--t:' + dur + 's;--dl:' + (-r(4) * dur) + 's;--d:' + Math.round((r(5) - .5) * 80) + 'px';
     bg.appendChild(p);
   }
   document.body.insertBefore(bg, document.body.firstChild);
