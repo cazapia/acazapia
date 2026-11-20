@@ -2285,6 +2285,39 @@ nav .logo img{filter:drop-shadow(0 4px 9px rgba(12,38,84,.50)) drop-shadow(0 1px
 .hero-loading .mobile-hero-ui{opacity:0;}
 .hero-loading .dove-link{pointer-events:none;}
 </style>
+<style id="tema-oscuro-concazapia">
+/* ===== Fondo igual a concazapia.com: negro + azul marino + partículas que suben ===== */
+html { background: #000 !important; }
+html body { background: transparent !important; background-image: none !important; color: #eaf4ff; }
+html body .hero, html body .hero-inner-new { background: transparent !important; }
+html body .hero-visual-stage { background: transparent !important; background-image: none !important; }
+html body .hero-visual-stage::before, html body .hero-visual-stage::after, html body .hero-glow { display: none !important; }
+html body .hero-dots-back, html body .hero-dots-front { display: none !important; }
+html body #testimonios, html body #mensaje { background: transparent !important; }
+.cz-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; background: #000; }
+.cz-orb { position: absolute; border-radius: 999px; filter: blur(110px); }
+.cz-orb-1 { top: -180px; left: -120px; width: 520px; height: 520px; background: #0077b6; opacity: .18; animation: czDrift1 16s ease-in-out infinite; }
+.cz-orb-2 { top: 120px; right: -160px; width: 560px; height: 560px; background: #03045e; opacity: .6; animation: czDrift2 19s ease-in-out infinite; }
+.cz-orb-3 { bottom: -200px; left: 20%; width: 620px; height: 520px; background: #03045e; opacity: .55; animation: czDrift1 22s ease-in-out infinite reverse; }
+@keyframes czDrift1 { 50% { transform: translate(60px, 40px) } }
+@keyframes czDrift2 { 50% { transform: translate(-50px, 60px) } }
+.cz-p { position: absolute; bottom: -12px; border-radius: 999px; background: #fff; animation: czRise linear infinite; will-change: transform, opacity; }
+@keyframes czRise { 0% { transform: translate3d(0,0,0); opacity: 0 } 8% { opacity: .9 } 50% { transform: translate3d(var(--d,0px), -55vh, 0) } 90% { opacity: .85 } 100% { transform: translate3d(0, -112vh, 0); opacity: 0 } }
+@media (prefers-reduced-motion: reduce) { .cz-p, .cz-orb { animation-duration: inherit !important; animation-iteration-count: infinite !important; } }
+
+/* Cabecera y tarjetas en cristal oscuro */
+html body nav .nav-pill { background: rgba(3,4,94,.55) !important; border-color: #123a7a !important; box-shadow: 0 6px 24px rgba(0,0,0,.5) !important; }
+html body nav .nav-pill a { color: #cfdcee !important; }
+html body nav .nav-pill a.active { color: #00b4d8 !important; background: rgba(0,180,216,.16) !important; }
+html body .mobile-goal, html body .mobile-count, html body .mobile-live {
+  background: rgba(3,4,94,.5) !important; border-color: rgba(0,180,216,.5) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px -10px rgba(0,119,182,.6), inset 0 1px 0 rgba(255,255,255,.08) !important; }
+html body .mobile-goal span, html body .mobile-count span { color: #cfdcee !important; }
+html body .mobile-goal span b { color: #fff !important; }
+html body #testimonios h2 .c { text-shadow: 0 0 30px rgba(0,180,216,.4); }
+html body .testimonial-real { background: rgba(3,4,94,.4) !important; border: 1px solid #123a7a !important; box-shadow: 0 20px 50px -20px rgba(0,0,0,.8) !important; }
+html body .testimonial-city { color: #00b4d8 !important; }
+</style>
 </head>
 <body>
 
@@ -3246,6 +3279,21 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!a || typeof gtag !== 'function') return;
     gtag('event', 'unirme_telegram', { boton: boton(a), transport_type: 'beacon' });
   }, true);
+})();
+</script>
+<script id="particulas-concazapia">
+(function () {
+  if (document.querySelector('.cz-bg')) return;
+  var bg = document.createElement('div'); bg.className = 'cz-bg'; bg.setAttribute('aria-hidden', 'true');
+  bg.innerHTML = '<div class="cz-orb cz-orb-1"></div><div class="cz-orb cz-orb-2"></div><div class="cz-orb cz-orb-3"></div>';
+  for (var i = 0; i < 34; i++) {
+    var r = function (n) { var x = Math.sin(i * 12.9898 + n * 78.233) * 43758.5453; return x - Math.floor(x); };
+    var dur = 14 + r(2) * 14, size = 2 + Math.round(r(3) * 4), p = document.createElement('div');
+    p.className = 'cz-p';
+    p.style.cssText = 'left:' + (r(1) * 100) + '%;width:' + size + 'px;height:' + size + 'px;box-shadow:0 0 ' + (size * 2) + 'px ' + Math.max(1, Math.floor(size / 2)) + 'px rgba(255,255,255,.7);animation-duration:' + dur + 's;animation-delay:' + (-r(4) * dur) + 's;--d:' + Math.round((r(5) - .5) * 80) + 'px';
+    bg.appendChild(p);
+  }
+  document.body.insertBefore(bg, document.body.firstChild);
 })();
 </script>
 </body>
